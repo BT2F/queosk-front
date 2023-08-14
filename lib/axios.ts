@@ -1,4 +1,4 @@
-import { default as axiosDefault } from 'axios/index';
+import { default as axiosDefault } from 'axios';
 
 const axios = axiosDefault.create();
 
