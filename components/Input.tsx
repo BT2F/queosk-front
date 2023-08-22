@@ -40,7 +40,8 @@ export default function Input({
   );
 }
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputFieldProps
+  extends InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> {
   error?: boolean;
   onEnter?: () => void;
 }
@@ -62,6 +63,23 @@ Input.Field = forwardRef(
             onEnter();
           }
         }}
+        {...props}
+      />
+    );
+  },
+);
+
+Input.Select = forwardRef(
+  (
+    { error, onEnter = () => {}, ...props }: InputFieldProps,
+    ref: ForwardedRef<HTMLSelectElement>,
+  ) => {
+    return (
+      <select
+        className={`w-full px-4 py-[6px] bg-gray-700/10 border border-gray-700/20 rounded duration-300 ${
+          error && 'border-red-500 bg-red-500/20'
+        }`}
+        ref={ref}
         {...props}
       />
     );
