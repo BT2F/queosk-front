@@ -1,8 +1,11 @@
 import { HTMLAttributes } from 'react';
 
-const SignLayout = (props: HTMLAttributes<HTMLDivElement>) => (
+const SignLayout = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className="absolute w-screen h-screen min-h-[500px] flex justify-center items-center"
+    className={`absolute w-screen h-screen px-2 min-h-[530px] flex justify-center items-center overflow-y-auto ${className}`}
     {...props}
   />
 );
@@ -28,7 +31,10 @@ SignLayout.InputContainer = (props: HTMLAttributes<HTMLDivElement>) => (
 );
 
 SignLayout.LinkContainer = (props: HTMLAttributes<HTMLDivElement>) => (
-  <div className="flex mt-9 justify-center items-center" {...props} />
+  <div
+    className="flex mt-9 justify-center items-center duration-100 hover:scale-105"
+    {...props}
+  />
 );
 
 export default SignLayout;

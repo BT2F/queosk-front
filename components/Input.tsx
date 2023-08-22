@@ -19,6 +19,7 @@ export default function Input({
   label,
   children,
   errorText,
+  className,
   ...props
 }: InputProps) {
   const child = Children.only(children);
@@ -26,7 +27,10 @@ export default function Input({
   const isError = !!child.props.error ?? true;
 
   return (
-    <div {...props} className="relative flex flex-col pb-6 gap-1 [&+&]:mt-2">
+    <div
+      {...props}
+      className={`relative flex flex-col pb-6 gap-1 [&+&]:mt-2 ${className}`}
+    >
       <label htmlFor={id}>{label}</label>
       {cloneElement(child, { ...child.props, id })}
       {isError && (
