@@ -1,10 +1,10 @@
 import { HTMLAttributes } from 'react';
 
 const BusinessSignUpLayout = (props: HTMLAttributes<HTMLDivElement>) => (
-  <div className="my-10 p-10 max-w-[1050px] mx-auto" {...props} />
+  <div className="absolute w-screen top-0 left-0 my-10 p-10" {...props} />
 );
 BusinessSignUpLayout.Form = (props: HTMLAttributes<HTMLFormElement>) => (
-  <form className="" {...props} />
+  <form className="relative max-w-[1050px] mx-auto" {...props} />
 );
 BusinessSignUpLayout.Grid = (props: HTMLAttributes<HTMLDivElement>) => (
   <div className="grid grid-cols-2 gap-x-10" {...props} />
