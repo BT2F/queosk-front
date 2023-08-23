@@ -1,7 +1,6 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
   color?: 'kakao' | 'primary';
   size?: 'lg' | 'md' | 'sm';
 }
@@ -20,6 +19,7 @@ const sizeMap = {
 export default function Button({
   color = 'primary',
   size = 'md',
+  className,
   ...props
 }: ButtonProps) {
   return (
@@ -27,6 +27,7 @@ export default function Button({
       className={`w-full rounded [&+&]:mt-[20px] duration-300
         ${colorMap[color]}  
         ${sizeMap[size]} 
+        ${className} 
       `}
       {...props}
     />

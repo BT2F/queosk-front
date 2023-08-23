@@ -5,7 +5,7 @@ const SignLayout = ({
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`absolute w-screen h-screen px-2 min-h-[530px] flex justify-center items-center overflow-y-auto ${className}`}
+    className={`absolute top-0 left-0 w-screen h-screen px-2 min-h-[530px] flex justify-center items-center overflow-y-auto ${className}`}
     {...props}
   />
 );
