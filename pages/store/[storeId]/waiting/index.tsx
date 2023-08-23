@@ -1,10 +1,9 @@
-import NumOfVisitor from '@/components/NumOfVisitor';
+import NumOfVisitor from '@/components/views/NumsOfVisitor';
 
-export default function pages() {
+export default function Page() {
   return (
     <>
       <NumOfVisitor />
-      {/* <WatingRegistration /> */}
     </>
   );
 }
