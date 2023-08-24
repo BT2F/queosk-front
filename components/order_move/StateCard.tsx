@@ -1,4 +1,3 @@
-import Button from './Button';
 import LayoutState from './LayoutState';
 import { useState, useEffect } from 'react';
 
@@ -61,12 +60,12 @@ export default function StateCard({
       ))}
       <div className="flex justify-between py-1">
         <span className="ml-2.5">주문 일시 {orderDateTime}</span>
-        <Button
+        <button
           className="mr-2.5 w-90 bg-black text-white px-2"
           onClick={handleCookCompleteClick}
         >
           조리 완료
-        </Button>
+        </button>
       </div>
     </LayoutState>
   );
