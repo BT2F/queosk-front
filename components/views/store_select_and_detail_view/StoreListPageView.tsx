@@ -1,4 +1,4 @@
-import StoreLists from '@/components/StoreLists';
+import StoreLists from '@/components/store_select_and_detail/StoreLists';
 import { useState } from 'react';
 
 interface storeListType {
@@ -53,7 +53,7 @@ const storeList = [
   },
 ];
 
-export default function StoreListPage() {
+export default function StoreListPageView() {
   const [selectedOption, setSelectedOption] = useState<string>('카테고리');
 
   return (
