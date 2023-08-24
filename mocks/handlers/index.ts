@@ -1,3 +1,3 @@
-import { userHander } from '@/mocks/handlers/userHander';
+import { userHandler } from '@/mocks/handlers/userHandler';
 
-export const handlers = [...userHander];
+export const handlers = [...userHandler];

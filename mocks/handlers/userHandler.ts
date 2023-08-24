@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 
-export const userHander = [
+export const userHandler = [
   // 고객 회원 가입
   rest.post<{
     email: string;
