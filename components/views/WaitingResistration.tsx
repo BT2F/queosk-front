@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import NumOfVisitor from './NumsOfVisitor';
+import NumsOfVisitor from './NumsOfVisitor';
 import WaitingLayOut from '../waiting/WaitingLayOut';
 import WaitingTopHeader from '../waiting/WaitingTopHeader';
+import WaitingButton from '../waiting/WaitingButton';
 
 interface previousComponentProps {
   count: number;
@@ -18,7 +19,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
   return (
     <>
       {previousComponent ? (
-        <NumOfVisitor/>
+        <NumsOfVisitor numOfCount={count}/>
       ) : (
         <WaitingLayOut>
           <WaitingTopHeader
@@ -50,9 +51,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
           </div>
           <div className="waiting-footer fixed bottom-0 max-w-[80%] md:max-w-[640px] w-[100%]">
             <div className="pb-4 px-5 flex-col">
-              <button className="btn btn-warning text-white w-full">
-                웨이팅 등록하기
-              </button>
+              <WaitingButton children={'웨이팅 등록하기'}/>
             </div>
           </div>
         </WaitingLayOut>
