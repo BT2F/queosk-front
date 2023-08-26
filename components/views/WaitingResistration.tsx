@@ -28,7 +28,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
             onClick={() => setPreviousComponent(true)}
           />
           <div className="select-visitor pb-8 border-b-8">
-            <h1 className="text-2xl font-bold px-5 my-6">
+            <h1 className="text-xl font-bold px-5 my-6">
               {storeId}에<br />
               웨이팅 등록하시겠어요?
             </h1>

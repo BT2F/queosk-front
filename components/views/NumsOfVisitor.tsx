@@ -30,7 +30,7 @@ export default function NumsOfVisitor({numOfCount}: numOfCountProps) {
             storeId={storeId}
           />
           <div className="select-visitor">
-            <h1 className="text-2xl font-bold px-3 mt-4">
+            <h1 className="text-xl font-bold px-5 mt-4">
               방문 인원을 선택해주세요.
             </h1>
             <div className="count-visitor">
