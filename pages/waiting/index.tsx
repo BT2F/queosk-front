@@ -1,4 +1,4 @@
-import NowWaiting from "@/components/views/waiting/NowWaiting";
+import NowWaiting from "@/components/views/NowWaiting";
 
 export default function Page() {
   return (
