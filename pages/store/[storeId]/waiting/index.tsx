@@ -1,4 +1,4 @@
-import NumOfVisitor from '@/components/views/waiting/NumsOfVisitor';
+import NumOfVisitor from '@/components/views/NumsOfVisitor';
 
 export default function Page() {
   return (
