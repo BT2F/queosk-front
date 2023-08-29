@@ -139,12 +139,14 @@ export const restaurantHandler = [
 
   // 매장 조회
   rest.get('/api/restaurant/coord', (req, res, ctx) => {
-    const { x, y, size, page } = req.params;
+    const { size, page } = req.params;
 
-    Array.from({ length: +size }, (_, i) => ({
+    const data = Array.from({ length: +size }, (_, i) => ({
       ...restaurantData,
       restaurantName: `${restaurantData.restaurantName}-${i + +page * +size}`,
     }));
+
+    return res(ctx.status(200), ctx.json(data));
   }),
 
   // 매장 상세 보기
