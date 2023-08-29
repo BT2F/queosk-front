@@ -36,7 +36,7 @@ export const menuHandler = [
     return res(ctx.status(200), ctx.json(menuListData));
   }),
   // 메뉴 이미지 업로드 후 URL 가져오기
-  rest.post('/api/restaurants/menus/image', (_req, res, ctx) => {
+  rest.post('/api/restaurant/menus/image', (_req, res, ctx) => {
     return res(ctx.status(201));
   }),
 
@@ -63,11 +63,11 @@ export const menuHandler = [
   ),
 
   // 식당 메뉴 목록 수정
-  rest.put<{ name?: string; price?: number }>(
-    '/api/restaurants/menus/:id',
+  rest.put<{ name?: string; price?: number; status?: string }>(
+    '/api/restaurant/menus/:id',
     (req, res, ctx) => {
       const { id } = req.params;
-      const { name, price } = req.body;
+      const { name, price, status } = req.body;
 
       const targetMenu = menuListData.find((v) => v.id === +id);
 
@@ -80,6 +80,7 @@ export const menuHandler = [
         ...targetMenu,
         name: name || targetMenu.name,
         price: price || targetMenu.price,
+        status: status || targetMenu.status,
       };
 
       // 메뉴 리스트 데이터 수정
@@ -90,14 +91,14 @@ export const menuHandler = [
   ),
 
   // 메뉴 이미지 수정
-  rest.put('/api/restaurants/menus/:id/image', (req, res, ctx) => {
+  rest.put('/api/restaurant/menus/:id/image', (req, res, ctx) => {
     // API 문서 기준 코드 204 ?
     return res(ctx.status(204));
   }),
 
   // 메뉴 주문가능여부 상태 수정
   rest.put<{ status: string }>(
-    '/api/restaurants/menus/:id/status',
+    '/api/restaurant/menus/:id/status',
     (req, res, ctx) => {
       const { id } = req.params;
       const { status } = req.body;
@@ -117,7 +118,7 @@ export const menuHandler = [
   ),
 
   // 메뉴 삭제
-  rest.delete('/api/restaurants/menus/:id', (req, res, ctx) => {
+  rest.delete('/api/restaurant/menus/:id', (req, res, ctx) => {
     const { id } = req.params;
     menuListData = menuListData.filter((v) => v.id !== +id);
 
