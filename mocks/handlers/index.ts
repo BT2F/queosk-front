@@ -4,6 +4,7 @@ import { tokenHandler } from '@/mocks/handlers/tokenHandler';
 import { restaurantHandler } from '@/mocks/handlers/restaurantHandler';
 import { menuHandler } from '@/mocks/handlers/menuHandler';
 import { orderHandler } from '@/mocks/handlers/orderHandler';
+import { tablesHandler } from '@/mocks/handlers/tablesHandler';
 
 export const handlers = [
   ...userHandler,
@@ -12,4 +13,5 @@ export const handlers = [
   ...restaurantHandler,
   ...menuHandler,
   ...orderHandler,
+  ...tablesHandler,
 ];
