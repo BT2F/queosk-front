@@ -12,6 +12,24 @@ interface AddFormProps {
 }
 export default function AddForm({ menuData }: AddFormProps) {
   const [fileImage, setFileImage] = useState('');
+  const [inputName, setInputName] = useState('');
+  const [inputPrice, setInputPrice] = useState('');
+  const [inputFile, setInputFile] = useState('');
+
+  const handleNameChange = (event: any) => {
+    setInputName(event.target.value);
+  };
+
+  const handlePriceChange = (event: any) => {
+    setInputPrice(event.target.value);
+  };
+
+  const handleClick = () => {
+    setFileImage('');
+    setInputName('');
+    setInputPrice('');
+    setInputFile('');
+  };
 
   const {
     register,
@@ -23,12 +41,14 @@ export default function AddForm({ menuData }: AddFormProps) {
     const newData = { fileImage, ...data };
 
     menuData(newData);
+    handleClick();
   };
 
   const saveFileImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFileImage(URL.createObjectURL(e.target.files[0]));
     }
+    setInputFile(e.target.value);
   };
 
   return (
@@ -52,7 +72,9 @@ export default function AddForm({ menuData }: AddFormProps) {
             })}
             type="text"
             placeholder="메뉴명"
-            className="border pl-2"
+            className="border pl-3 py-1"
+            onChange={handleNameChange}
+            value={inputName}
           />
           <input
             {...register('menuPrice', {
@@ -60,18 +82,28 @@ export default function AddForm({ menuData }: AddFormProps) {
             })}
             type="text"
             placeholder="가격"
-            className="border pl-2"
+            className="border pl-3 py-1"
+            onChange={handlePriceChange}
+            value={inputPrice}
           />
         </div>
         <div className="flex justify-between">
+          <label
+            htmlFor="fileInput"
+            className="px-6 py-2 bg-blue-100 rounded-[4px] text-sm font-semibold text-slate-500 cursor-pointer"
+          >
+            이미지 업로드
+          </label>
           <input
             {...register('menuImg', {
               required: true,
             })}
+            id="fileInput"
             type="file"
             placeholder="이미지"
-            className="w-[220px] pl-2"
-            onChange={(e) => saveFileImage(e)}
+            className="hidden"
+            onChange={saveFileImage}
+            value={inputFile}
           />
         </div>
         {fileImage && (
