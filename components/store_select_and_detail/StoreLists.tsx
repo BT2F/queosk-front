@@ -1,5 +1,7 @@
+import { useRouter } from 'next/router';
+
 interface storeListType {
-  id?: number;
+  id: number;
   title: string;
   imgSrc: string;
   address: string;
@@ -7,9 +9,22 @@ interface storeListType {
   homepage?: string;
 }
 
-export default function StoreLists({ imgSrc, title, address }: storeListType) {
+export default function StoreLists({
+  id,
+  imgSrc,
+  title,
+  address,
+}: storeListType) {
+  const router = useRouter();
+
+  const handleStoreClick = () => {
+    router.push(`/store/${id}`);
+  };
   return (
-    <div className="card card-side bg-base-100 w-11/12 shadow-xl mb-3">
+    <div
+      className="card card-side bg-base-100 w-11/12 shadow-xl mb-3"
+      onClick={handleStoreClick}
+    >
       <figure className="w-3/12">
         <img src="#" alt={imgSrc} className="object-cover w-full h-full" />
       </figure>
