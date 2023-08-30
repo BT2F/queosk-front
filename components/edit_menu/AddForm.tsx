@@ -54,9 +54,9 @@ export default function AddForm({ menuData }: AddFormProps) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center ">
-        <div className="font-bold text-xl my-4">메뉴 등록</div>
+        <div className="font-semibold text-xl my-6">메뉴 등록</div>
         <button
-          className="w-[80px] h-[33px] border-2 border-blue-300 rounded-md"
+          className="w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
           type="submit"
           onClick={handleSubmit(onSubmit)}
         >
@@ -65,14 +65,14 @@ export default function AddForm({ menuData }: AddFormProps) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 mb-[6px]">
           <input
             {...register('menuName', {
               required: true,
             })}
             type="text"
             placeholder="메뉴명"
-            className="border pl-3 py-1"
+            className="border border-zinc-400 rounded-lg pl-3 py-1"
             onChange={handleNameChange}
             value={inputName}
           />
@@ -82,7 +82,7 @@ export default function AddForm({ menuData }: AddFormProps) {
             })}
             type="text"
             placeholder="가격"
-            className="border pl-3 py-1"
+            className="border border-zinc-400 rounded-lg pl-3 py-1"
             onChange={handlePriceChange}
             value={inputPrice}
           />
@@ -90,7 +90,7 @@ export default function AddForm({ menuData }: AddFormProps) {
         <div className="flex justify-between">
           <label
             htmlFor="fileInput"
-            className="px-6 py-2 bg-blue-100 rounded-[4px] text-sm font-semibold text-slate-500 cursor-pointer"
+            className="px-6 py-2 rounded-[4px] border-2 border-[#FBBD23] text-sm font-semibold text-[#FBBD23] cursor-pointer"
           >
             이미지 업로드
           </label>

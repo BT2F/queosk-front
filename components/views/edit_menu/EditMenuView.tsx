@@ -54,16 +54,16 @@ export default function EditMenuView() {
       <AddForm menuData={getInfo} />
       <div>
         <div className="flex justify-between items-center">
-          <div className="font-bold text-xl my-4">메뉴 목록</div>
+          <div className="font-bold text-xl my-6">메뉴 목록</div>
           <button
-            className="w-[80px] h-[33px] border-2 border-blue-300 rounded-md"
+            className="w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
             onClick={handleDelete}
           >
             삭제
           </button>
         </div>
         <div>
-          <div className="h-[40px] flex items-center text-center border-y-2 border-blue-300">
+          <div className="h-[40px] flex items-center text-center border-y-[2px] border-zinc-300 font-bold">
             <div className="px-5 py-auto">
               <input
                 type="checkbox"
@@ -74,11 +74,11 @@ export default function EditMenuView() {
                 className="mx-auto"
               />
             </div>
-            <div className="w-[60px]">No.</div>
-            <div className="w-2/6">메뉴명</div>
-            <div className="w-1/6">가격</div>
+            <div className="w-1/6">No.</div>
+            <div className="w-3/6">메뉴명</div>
+            <div className="w-2/6">가격</div>
             <div className="w-2/6">이미지</div>
-            <div className="w-1/6">관리</div>
+            <div className="w-2/6">관리</div>
           </div>
           {menuList.map((data, index) => (
             <div key={index} className="flex items-center text-center my-2">
@@ -91,20 +91,22 @@ export default function EditMenuView() {
                   checked={checkedMenu.includes(data.id?.toString() as string)}
                 />
               </div>
-              <div className="w-[60px]">{index + 1}</div>
-              <div className="w-2/6">{data.menuName}</div>
-              <div className="w-1/6">{data.menuPrice} 원</div>
+              <div className="w-1/6">{index + 1}</div>
+              <div className="w-3/6">{data.menuName}</div>
+              <div className="w-2/6">{data.menuPrice} 원</div>
               {data.fileImage && (
                 <div className="w-2/6">
                   <img
-                    className="w-[40px] mx-auto"
+                    className="w-[40px] h-[40px] mx-auto"
                     src={data.fileImage}
                     alt="Menu"
                   />
                 </div>
               )}
-              <div className="w-1/6">
-                <button className="w-[60px] bg-blue-100">품절</button>
+              <div className="w-2/6">
+                <button className="w-[60px] border border-[#FBBD23] rounded-2xl py-1">
+                  품절
+                </button>
               </div>
             </div>
           ))}
