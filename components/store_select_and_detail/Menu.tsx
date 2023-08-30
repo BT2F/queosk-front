@@ -1,4 +1,4 @@
-interface MenuType {
+export interface MenuType {
   menuName: string;
   menuPrice: string;
 }
