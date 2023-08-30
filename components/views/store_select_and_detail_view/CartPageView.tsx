@@ -18,8 +18,8 @@ export default function CartPageView() {
           테이블번호 : <span>{tableId}</span>
         </div>
         <div className="ms-20 me-20 mb-5 flex justify-between">
-          <button className="btn btn-active btn-primary"> ← 메뉴보기</button>
-          <button className="btn btn-active btn-secondary">전체삭제</button>
+          <button className="btn btn-active bg-yellow-400"> ← 메뉴보기</button>
+          <button className="btn btn-active btn-error">전체삭제</button>
         </div>
 
         <div className="h-112 overflow-y-auto">
@@ -29,7 +29,7 @@ export default function CartPageView() {
           <MenuInCart menuName="고기" price={12000} imgSrc="고기" />
           <MenuInCart menuName="고기" price={12000} imgSrc="고기" />
         </div>
-        <div className="flex justify-evenly mt-5">
+        <div className="flex justify-evenly mt-5 mb-5">
           <div className="flex flex-col justify-center">
             <div>
               총 주문 아이템 : <span>1</span> 개
@@ -38,7 +38,7 @@ export default function CartPageView() {
               총 주문 금액 : <span>50000</span> 원
             </div>
           </div>
-          <button className="btn btn-lg btn-error text-white text-bold">
+          <button className="btn btn-lg bg-yellow-400 text-white text-bold">
             주문 및 결제하기
           </button>
         </div>

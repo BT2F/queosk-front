@@ -39,16 +39,16 @@ export default function MenuInCart({
             </button>
             <div className="mt-5">
               <button
-                className="btn btn-md btn-active btn-neutral"
+                className="btn btn-sm btn-active btn-neutral"
                 onClick={handleAddOrder}
               >
                 +
               </button>
-              <span className="inline-block w-10 text-center text-xl">
+              <span className="inline-block w-7 text-center text-xl">
                 {quantity}
               </span>
               <button
-                className="btn btn-md btn-active btn-neutral"
+                className="btn btn-sm btn-active btn-neutral"
                 onClick={handleSubtractOrder}
               >
                 -

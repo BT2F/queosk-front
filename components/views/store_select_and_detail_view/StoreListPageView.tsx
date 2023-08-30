@@ -35,22 +35,22 @@ const storeList = [
     phone: '123-1234',
     homepage: 'www.google.com',
   },
-  {
-    id: 4,
-    title: '4호점',
-    imgSrc: 'image',
-    address: '4번가',
-    phone: '123-1234',
-    homepage: 'www.google.com',
-  },
-  {
-    id: 5,
-    title: '5호점',
-    imgSrc: 'image',
-    address: '5번가',
-    phone: '123-1234',
-    homepage: 'www.google.com',
-  },
+  // {
+  //   id: 4,
+  //   title: '4호점',
+  //   imgSrc: 'image',
+  //   address: '4번가',
+  //   phone: '123-1234',
+  //   homepage: 'www.google.com',
+  // },
+  // {
+  //   id: 5,
+  //   title: '5호점',
+  //   imgSrc: 'image',
+  //   address: '5번가',
+  //   phone: '123-1234',
+  //   homepage: 'www.google.com',
+  // },
 ];
 
 export default function StoreListPageView() {
