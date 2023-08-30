@@ -5,7 +5,7 @@ interface LayoutStateProps {
 export default function LayoutState({ children, className }: LayoutStateProps) {
   return (
     <div
-      className={`border-black border-solid rounded-2xl border flex flex-col gap-1 py-1 m-3 ${className}`}
+      className={`border-2 border-zinc-300 rounded-2xl border flex flex-col gap-1 py-1 m-3 ${className}`}
     >
       {children}
     </div>

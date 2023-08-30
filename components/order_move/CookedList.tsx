@@ -20,7 +20,7 @@ interface CookedListProps {
 export default function CookedList({ cookedMenuList }: CookedListProps) {
   return (
     <LayoutState className="w-auto h-[560px]">
-      <div className="text-center border-b border-black border-solid py-1">
+      <div className="text-center border-b border-black border-solid py-2 font-bold">
         조리 완료 목록
       </div>
       <div className="overflow-auto">
@@ -29,17 +29,18 @@ export default function CookedList({ cookedMenuList }: CookedListProps) {
             key={index}
             className="[&:not(:last-child)]:border-b border-black border-solid py-2 flex flex-col gap-1 "
           >
-            <div> {order.tableNumber}번 테이블</div>
-            <div>조리 완료 : {order.cookTime}</div>
+            <div className="font-bold px-2"> {order.tableNumber}번 테이블</div>
+
             {order.menu.map((menuItem, itemIndex) => (
               <div
                 key={itemIndex}
-                className="flex justify-between bg-slate-100"
+                className="flex justify-between px-3 py-1 border-t-2 border-zinc-200"
               >
                 <span>{menuItem.menuName}</span>
-                <span>{menuItem.quantity}개</span>
+                <span>x {menuItem.quantity}</span>
               </div>
             ))}
+            <div className="px-2 py-1">조리 완료 {order.cookTime}</div>
           </div>
         ))}
       </div>

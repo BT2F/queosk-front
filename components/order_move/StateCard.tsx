@@ -47,26 +47,32 @@ export default function StateCard({
   };
 
   return (
-    <LayoutState className="w-auto">
-      <div className="flex justify-between border-b border-black border-solid py-1">
-        <span className="ml-2.5">{tableNumber}번 테이블</span>
-        <span className="mr-2.5">주문 내역</span>
-      </div>
-      {menu.map((menuItem, index) => (
-        <div key={index} className="flex justify-between bg-slate-100">
-          <span>{menuItem.menuName}</span>
-          <span>{menuItem.quantity}개</span>
+    <div>
+      <LayoutState className="w-auto">
+        <div className="flex justify-between py-1">
+          <span className="ml-2.5 flex items-center font-bold">
+            {tableNumber}번 테이블
+          </span>
         </div>
-      ))}
-      <div className="flex justify-between py-1">
-        <span className="ml-2.5">주문 일시 {orderDateTime}</span>
-        <button
-          className="mr-2.5 w-90 bg-black text-white px-2"
-          onClick={handleCookCompleteClick}
-        >
-          조리 완료
-        </button>
-      </div>
-    </LayoutState>
+        {menu.map((menuItem, index) => (
+          <div
+            key={index}
+            className="flex justify-between px-3 py-1 w-full border-t-2 border-zinc-200"
+          >
+            <span>{menuItem.menuName}</span>
+            <span>x {menuItem.quantity}</span>
+          </div>
+        ))}
+        <div className="flex justify-between py-1 items-center">
+          <span className="ml-2.5">주문 일시 {orderDateTime}</span>
+          <button
+            className="mr-2.5 w-[105px] border-2 border-[#FBBD23] bg-white rounded-2xl text-[#FBBD23] font-bold py-1"
+            onClick={handleCookCompleteClick}
+          >
+            조리 완료
+          </button>
+        </div>
+      </LayoutState>
+    </div>
   );
 }

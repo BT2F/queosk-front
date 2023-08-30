@@ -158,15 +158,15 @@ export default function OrderListMoveView() {
     );
   };
   return (
-    <div className="w-full h-[800px] border-black border-2 flex flex-row justify-center">
-      <LayoutState className="w-2/3 h-auto overflow-auto">
+    <div className="w-full h-[800px] flex flex-row justify-center">
+      <div className="w-2/3 h-auto overflow-auto">
         <OrderList
           visibleStateIndex={visibleStateIndex}
           data={Data}
           cookCompleteClick={handleCookCompleteClick}
         />
-      </LayoutState>
-      <div className="w-1/3">
+      </div>
+      <div className="w-[250px]">
         <AdditionalWaiting />
         <CookedList cookedMenuList={cookedMenuList} />
       </div>
