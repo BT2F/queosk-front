@@ -56,7 +56,7 @@ export default function EditMenuView() {
         <div className="flex justify-between items-center">
           <div className="font-bold text-xl my-6">메뉴 목록</div>
           <button
-            className="w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
+            className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
             onClick={handleDelete}
           >
             삭제
@@ -94,17 +94,25 @@ export default function EditMenuView() {
               <div className="w-1/6">{index + 1}</div>
               <div className="w-3/6">{data.menuName}</div>
               <div className="w-2/6">{data.menuPrice} 원</div>
-              {data.fileImage && (
+              {data.fileImage ? (
                 <div className="w-2/6">
                   <img
                     className="w-[40px] h-[40px] mx-auto"
                     src={data.fileImage}
-                    alt="Menu"
+                    alt="메뉴이미지"
+                  />
+                </div>
+              ) : (
+                <div className="w-2/6">
+                  <img
+                    className="w-[40px] h-[40px] mx-auto"
+                    src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
+                    alt="이미지없음"
                   />
                 </div>
               )}
               <div className="w-2/6">
-                <button className="w-[60px] border border-[#FBBD23] rounded-2xl py-1">
+                <button className="btn btn-sm w-[70px] border border-[#FBBD23] bg-white rounded-2xl py-1">
                   품절
                 </button>
               </div>
