@@ -66,7 +66,7 @@ export default function StateCard({
         <div className="flex justify-between py-1 items-center">
           <span className="ml-2.5">주문 일시 {orderDateTime}</span>
           <button
-            className="mr-2.5 w-[105px] border-2 border-[#FBBD23] bg-white rounded-2xl text-[#FBBD23] font-bold py-1"
+            className="btn btn-outline btn-warning mr-2.5 w-[105px] border-2 border-[#FBBD23] bg-white rounded-2xl text-[#FBBD23] font-bold"
             onClick={handleCookCompleteClick}
           >
             조리 완료

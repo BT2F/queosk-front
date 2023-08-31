@@ -23,7 +23,7 @@ export default function CookedList({ cookedMenuList }: CookedListProps) {
       <div className="text-center border-b border-black border-solid py-2 font-bold">
         조리 완료 목록
       </div>
-      <div className="overflow-auto">
+      <div className="overflow-y-scroll" id="scrollCustom">
         {cookedMenuList.map((order, index) => (
           <div
             key={index}
@@ -44,6 +44,21 @@ export default function CookedList({ cookedMenuList }: CookedListProps) {
           </div>
         ))}
       </div>
+      <style>
+        {`
+            #scrollCustom::-webkit-scrollbar {
+                width: 4px;
+                cursor: pointer;                   
+            }
+            #scrollCustom::-webkit-scrollbar-track {
+                background-color: rgba(229, 231, 235, var(--bg-opacity));
+                cursor: pointer;
+            }
+            #scrollCustom::-webkit-scrollbar-thumb {
+                cursor: pointer;
+                background-color: #a0aec0;
+            }`}
+      </style>
     </LayoutState>
   );
 }

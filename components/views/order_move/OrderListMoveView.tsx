@@ -158,13 +158,28 @@ export default function OrderListMoveView() {
     );
   };
   return (
-    <div className="w-full h-[800px] flex flex-row justify-center">
-      <div className="w-2/3 h-auto overflow-auto">
+    <div className="w-full h-[800px] flex flex-row justify-center px-[10px] py-[10px]">
+      <div className="w-2/3 h-auto overflow-y-scroll" id="scrollCustom">
         <OrderList
           visibleStateIndex={visibleStateIndex}
           data={Data}
           cookCompleteClick={handleCookCompleteClick}
         />
+        <style>
+          {`
+            #scrollCustom::-webkit-scrollbar {
+                width: 4px;
+                cursor: pointer;                   
+            }
+            #scrollCustom::-webkit-scrollbar-track {
+                background-color: rgba(229, 231, 235, var(--bg-opacity));
+                cursor: pointer;
+            }
+            #scrollCustom::-webkit-scrollbar-thumb {
+                cursor: pointer;
+                background-color: #a0aec0;
+            }`}
+        </style>
       </div>
       <div className="w-[250px]">
         <AdditionalWaiting />
