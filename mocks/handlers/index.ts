@@ -6,6 +6,7 @@ import { menuHandler } from '@/mocks/handlers/menuHandler';
 import { orderHandler } from '@/mocks/handlers/orderHandler';
 import { tablesHandler } from '@/mocks/handlers/tablesHandler';
 import { settlementHandler } from '@/mocks/handlers/settlementHandler';
+import { queueHandler } from '@/mocks/handlers/queueHandler';
 
 export const handlers = [
   ...userHandler,
@@ -16,4 +17,5 @@ export const handlers = [
   ...orderHandler,
   ...tablesHandler,
   ...settlementHandler,
+  ...queueHandler,
 ];
