@@ -7,6 +7,7 @@ import { orderHandler } from '@/mocks/handlers/orderHandler';
 import { tablesHandler } from '@/mocks/handlers/tablesHandler';
 import { settlementHandler } from '@/mocks/handlers/settlementHandler';
 import { queueHandler } from '@/mocks/handlers/queueHandler';
+import { reviewHandler } from '@/mocks/handlers/reviewHandler';
 
 export const handlers = [
   ...userHandler,
@@ -18,4 +19,5 @@ export const handlers = [
   ...tablesHandler,
   ...settlementHandler,
   ...queueHandler,
+  ...reviewHandler,
 ];
