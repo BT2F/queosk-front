@@ -125,20 +125,32 @@ Modal.ProfileInput =
 interface ProfileTextProps extends InputHTMLAttributes<HTMLInputElement> {
   textHeader?: string;
   validation?: boolean | null;
+  value?: string;
 }
 
-Modal.ProfileText = ({ textHeader, validation, ...props }: ProfileTextProps) => (
+Modal.ProfileText = ({
+  textHeader,
+  validation,
+  value,
+  ...props
+}: ProfileTextProps) => (
   <div className="profile-text text-left my-4">
     <div className="">
       {textHeader ? (
         <div className="mb-1 font-bold text-xs">{textHeader}</div>
       ) : null}
       <input className="w-full p-3 bg-gray-100 rounded-lg" {...props} />
-      {validation ? (
-        <p className='text-green-400 text-xs mt-2'>사용 가능한 닉네임입니다.</p>
-      ) : (
-        <p className='text-red-400 text-xs mt-2'>영문, 한글, 숫자를 시용하여 3~16자까지 입력하세요.</p>
-      )}
+      {value ? (
+        validation ? (
+          <p className="text-green-400 text-xs mt-2">
+            사용 가능한 닉네임입니다.
+          </p>
+        ) : (
+          <p className="text-red-400 text-xs mt-2">
+            영문, 한글, 숫자를 시용하여 3~16자까지 입력하세요.
+          </p>
+        )
+      ) : null}
     </div>
   </div>
 );
