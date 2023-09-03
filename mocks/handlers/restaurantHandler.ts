@@ -9,6 +9,16 @@ let restaurantData = {
   nickName: 'admin',
   imageUrl: placeholderImgUrl('100x100'),
   category: 'ASIAN',
+  ownerName: 'admin',
+  id: 1,
+  ownerId: 'test2',
+  businessNumber: '123-45-67890',
+  businessStartDate: '1990-04-28T00:00:00.000+00:00',
+  address: '세종로 81-4',
+  ratingAverage: null,
+  operationStatus: 'CLOSED',
+  maxWaiting: null,
+  region: '사직동',
 };
 
 export const restaurantHandler = [
@@ -25,7 +35,7 @@ export const restaurantHandler = [
     businessNumber: string;
     businessStartDate: string;
     address: string;
-  }>('/api/restaurant/signup', (req, res, ctx) => {
+  }>('/api/restaurants/signup', (req, res, ctx) => {
     const {
       ownerId,
       ownerName,
@@ -62,10 +72,10 @@ export const restaurantHandler = [
 
   // 사업자 로그인
   rest.post<{ id: string; password: string }>(
-    '/api/restaurant/signin',
+    '/api/restaurants/signin',
     (req, res, ctx) => {
       const { id, password } = req.body;
-      if (!(id === 'admin@email.com' && password === '123123123a!')) {
+      if (!(id === restaurantData.email && password === '123123123a!')) {
         return res(ctx.status(400));
       }
 
@@ -84,7 +94,7 @@ export const restaurantHandler = [
 
   // 사업자 이미지 업로드 ( 추후 formdata로 변경 필요 )
 
-  rest.post<{ image: string }>('/api/restaurant/image', (req, res, ctx) => {
+  rest.post<{ image: string }>('/api/restaurants/image', (req, res, ctx) => {
     const { image } = req.body;
     if (!image) {
       return res(ctx.status(400));
@@ -94,7 +104,7 @@ export const restaurantHandler = [
 
   // 사업자 로그아웃
 
-  rest.post('/api/restaurant/signout', (req, res, ctx) => {
+  rest.post('/api/restaurants/signout', (req, res, ctx) => {
     const accessToken = req.headers.get('authorization');
     if (accessToken !== 'accessToken') {
       return res(ctx.status(401));
@@ -103,25 +113,40 @@ export const restaurantHandler = [
   }),
 
   // 사업자 임시 비밀번호 발급
-  rest.post<{ email: string; ownerName: string }>(
-    '/api/user/resetpassword',
+  rest.put<{ email: string; ownerName: string }>(
+    '/api/restaurants/password/reset',
     (req, res, ctx) => {
       const { email, ownerName } = req.body;
 
-      if (email === 'admin@email.com' && ownerName === 'admin') {
+      if (
+        email === restaurantData.email &&
+        ownerName === restaurantData.ownerName
+      ) {
         return res(ctx.status(204)); // ? 코드 204..?
       }
       return res(ctx.status(400));
     },
   ),
 
+  // 사업자 비밀번호 수정
+  rest.put<{ oldPassword: string; newPassword: string }>(
+    '/api/restaurants/password/change',
+    (req, res, ctx) => {
+      const { oldPassword, newPassword } = req.body;
+      if (oldPassword !== '123123123a!' && newPassword !== '123123123a!') {
+        return res(ctx.status(400));
+      }
+      return res(ctx.status(204), ctx.json({ message: '이메일 전송 로직' }));
+    },
+  ),
+
   // 매장 정보 확인
-  rest.get('/api/restaurant', (req, res, ctx) => {
+  rest.get('/api/restaurants', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(restaurantData));
   }),
 
   // 매장 정보 수정
-  rest.put<Object>('/api/restaurant', (req, res, ctx) => {
+  rest.put<Object>('/api/restaurants', (req, res, ctx) => {
     const body = req.body;
     restaurantData = { ...restaurantData, ...body };
 
@@ -129,7 +154,7 @@ export const restaurantHandler = [
   }),
 
   // 매장 정보 삭제
-  rest.delete('/api/restaurant', (req, res, ctx) => {
+  rest.delete('/api/restaurants', (req, res, ctx) => {
     if (req.headers.get('authorization') !== 'accessToken') {
       return res(ctx.status(401));
     }
@@ -138,7 +163,7 @@ export const restaurantHandler = [
   }),
 
   // 매장 조회
-  rest.get('/api/restaurant/coord', (req, res, ctx) => {
+  rest.get('/api/restaurants', (req, res, ctx) => {
     const size = +(req.url.searchParams.get('size') || 5);
     const page = +(req.url.searchParams.get('page') || 0);
 
@@ -151,7 +176,7 @@ export const restaurantHandler = [
   }),
 
   // 매장 상세 보기
-  rest.get('/api/restaurant/:id', (req, res, ctx) => {
+  rest.get('/api/restaurants/:id', (req, res, ctx) => {
     // 매장 상세보기에 대한 API response 문서가 아직 작성되어 있지 않음
     return res(ctx.status(200), ctx.json(restaurantData));
   }),
