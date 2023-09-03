@@ -1,6 +1,14 @@
 import { rest } from 'msw';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 
+const userData = {
+  password: '123123123a!',
+  email: 'test@email.com',
+  nickName: 'test',
+  imageUrl: placeholderImgUrl('100x100'),
+  loginType: 'NORMAL',
+};
+
 export const userHandler = [
   // 고객 회원 가입
   rest.post<{
@@ -41,7 +49,7 @@ export const userHandler = [
     let status = 200;
     let message = '사용 가능한 이메일 입니다.';
 
-    if (email === 'test@email.com') {
+    if (email === userData.email) {
       status = 400;
       message = '이미 사용중인 이메일 입니다.';
     }
@@ -60,7 +68,7 @@ export const userHandler = [
     (req, res, ctx) => {
       const { email, password } = req.body;
 
-      if (!(email === 'test@email.com' && password === '123123123a!')) {
+      if (!(email === userData.email && password === userData.password)) {
         return res(ctx.status(400));
       }
 
@@ -123,11 +131,22 @@ export const userHandler = [
     return res(ctx.status(204));
   }),
 
+  rest.post<{ email: string; nickName: string }>(
+    '/api/users/password/reset',
+    (req, res, ctx) => {
+      const { email, nickName } = req.body;
+      if (email !== userData.email || nickName !== userData.nickName) {
+        return res(ctx.status(400));
+      }
+      return res(ctx.status(200), ctx.json({ message: '이메일로 전송 로직' }));
+    },
+  ),
+
   rest.put<{ existingPassword: string; newPassword: string }>(
     '/api/users/password/change',
     (req, res, ctx) => {
       const { existingPassword, newPassword } = req.body;
-      if (!(existingPassword === '123123123a!' && !!newPassword)) {
+      if (!(existingPassword === userData.password && !!newPassword)) {
         return res(ctx.status(400));
       }
       return res(ctx.status(204));
