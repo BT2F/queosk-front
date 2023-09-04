@@ -1,17 +1,15 @@
-interface ButtonProps {
-  children: string;
-  className?: string;
-  onClick: () => void;
+import { ButtonHTMLAttributes } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 }
 
-export default function WaitingButton({children, className, onClick}:ButtonProps) {
+export default function WaitingButton(props:ButtonProps) {
   return (
     <div className="pb-4 px-5 flex-col">
       <button
-        className={`btn btn-warning text-white w-full ${className}`}
-        onClick={onClick}
+        className={`btn btn-warning text-white w-full ${props.className}`} onClick={props.onClick}
       >
-        {children}
+        {props.children}
       </button>
     </div>
   );

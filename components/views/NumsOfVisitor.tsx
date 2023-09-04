@@ -2,17 +2,21 @@ import WaitingRegistration from './WaitingResistration';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import WaitingLayOut from '../waiting/WaitingLayOut';
-import ButtonComponent from '../waiting/WaitingButton';
 import WaitingTopHeader from '../waiting/WaitingTopHeader';
+import WaitingButton from '../waiting/WaitingButton';
 
-export default function NumOfVisitor(/* { numOfCount }: numOfCount */) {
-  const [count, setCount] = useState(1);
+interface numOfCountProps {
+  numOfCount?:number;
+}
+
+
+export default function NumsOfVisitor({numOfCount}: numOfCountProps) {
+  const [count, setCount] = useState(numOfCount ? numOfCount : 1);
   const [showNextComponent, setShowNextComponent] = useState(false);
   const router = useRouter();
   const { storeId } = router.query;
-  const toggleNextComponent = () => {
-    setShowNextComponent((prevValue) => !prevValue);
-  };
+  
+  console.log(showNextComponent)
 
   return (
     <>
@@ -36,15 +40,14 @@ export default function NumOfVisitor(/* { numOfCount }: numOfCount */) {
                   <button
                     className="border rounded-full w-6 h-6 flex justify-center items-center"
                     onClick={() => {
-                      if(count <= 1) {
-                        return count
+                      if (count <= 1) {
+                        return count;
                       }
-                      setCount(count - 1)}
-                    }
+                      setCount(count - 1);
+                    }}
                   >
                     -
                   </button>
-                  {/* {count} */}
                   <input
                     type="text"
                     name="count"
@@ -68,7 +71,7 @@ export default function NumOfVisitor(/* { numOfCount }: numOfCount */) {
               <span>방문 인원</span>
               <span>총 {count} 명</span>
             </div>
-            <ButtonComponent children="다음" onClick={toggleNextComponent} />
+            <WaitingButton children="다음" onClick={()=> {setShowNextComponent((prevValue) => !prevValue)}} />
           </div>
         </WaitingLayOut>
       )}
