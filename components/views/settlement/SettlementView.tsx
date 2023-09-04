@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-//import { ko } from 'date-fns/esm/locale';
 import axios from '@/lib/axios';
 import { format } from 'date-fns';
 
@@ -12,7 +11,7 @@ interface MenuType {
   count: number;
   price: number;
 }
-interface TodayDataType {
+interface DataType {
   orderdMenu: MenuType[];
   price: number;
 }
@@ -20,8 +19,8 @@ interface TodayDataType {
 export default function SettlementView() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [todayData, setTodayData] = useState<TodayDataType | null>(null);
-  //const [periodData, setPeriodData] = useState<TodayDataType | null>(null);
+  const [todayData, setTodayData] = useState<DataType | null>(null);
+  const [periodData, setPeriodData] = useState<DataType | null>(null);
 
   const onChange = (dates: [Date, Date]) => {
     const [start, end] = dates;
@@ -29,53 +28,52 @@ export default function SettlementView() {
     setEndDate(end);
   };
 
+  const { refetch: refetchTodayData } = useQuery<any, any>({
+    queryKey: ['today'],
+    queryFn: async () => {
+      const response = await axios.get('/api/restaurants/settlement/today');
+      return response.data;
+    },
+  });
+
+  const { refetch: refetchPeriodData } = useQuery<any, any>({
+    queryKey: ['period'],
+    queryFn: async () => {
+      const startDateString = format(startDate, 'yyyy-MM-dd');
+      const endDateString = format(endDate, 'yyyy-MM-dd');
+      const response = await axios.get(
+        `/api/restaurants/settlement/period?to=${endDateString}&from=${startDateString}`
+      );
+      console.log(response.data);
+      console.log(startDateString);
+      console.log(endDateString);
+      return response.data;
+    },
+  });
+
   useEffect(() => {
-    const fetchTodayData = async () => {
-      try {
-        const res = await axios({
-          method: 'get',
-          url: '/api/restaurants/settlement/today',
-        });
-        console.log(res.data);
-        if (res.status === 200) {
-          setTodayData(res.data);
+    if (startDate && endDate) {
+      const isToday = new Date();
+      if (startDate.toDateString() === endDate.toDateString()) {
+        if (startDate.toDateString() === isToday.toDateString()) {
+          refetchTodayData().then((data) => {
+            setTodayData(data?.data);
+            setPeriodData(null);
+          });
+        } else {
+          refetchPeriodData().then((data) => {
+            setPeriodData(data?.data);
+            setTodayData(null);
+          });
         }
-      } catch (error) {
-        console.log(error);
-        // if (axios.isAxiosError(error)) {
-        //   console.log(error);
-        // }
+      } else {
+        refetchPeriodData().then((data) => {
+          setPeriodData(data?.data);
+          setTodayData(null);
+        });
       }
-    };
-
-    fetchTodayData();
-  }, [startDate]);
-
-  // const { data: todayData } = useQuery<TodayDataType>({
-  //   queryKey: ['todaddd'],
-  //   queryFn: async () => await axios.get('/api/restaurants/settlement/today'),
-  // });
-
-  // useEffect(() => {
-  //   const startDateString = startDate.toISOString().split('T')[0];
-  //   const endDateString = endDate.toISOString().split('T')[0];
-  //   axios
-  //     .all([
-  //       axios.get('/api/restaurants/settlement/today'),
-  //       axios.get(
-  //         `/api/restaurants/settlement/period?to=${endDateString}&from=${startDateString}`
-  //       ),
-  //     ])
-  //     .then(
-  //       axios.spread((res1, res2) => {
-  //         console.log(res1, res2);
-  //       })
-  //     )
-  //     .catch((err) => console.log(err));
-  // });
-
-  // const formattedStartDate = format(startDate, 'yyyy-MM-dd');
-  // const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+    }
+  }, [startDate, endDate, refetchTodayData, refetchPeriodData]);
 
   return (
     <div className="w-4/5 mx-auto">
@@ -83,7 +81,6 @@ export default function SettlementView() {
       <div className="flex items-center mb-5">
         <div className="font-semibold text-base my-4 mr-5">기간조회</div>
         <ReactDatePicker
-          //locale={ko}
           shouldCloseOnSelect
           dateFormat="yyyy.MM.dd"
           selected={startDate}
@@ -125,11 +122,13 @@ export default function SettlementView() {
         <div className="font-semibold text-base mr-5">총 금액 : </div>
 
         <div>{todayData && `${todayData.price} 원`}</div>
+        <div>{periodData && `${periodData.price} 원`}</div>
       </div>
 
       <div className="font-bold text-xl pt-8 mb-8">
         목록 (총
-        {todayData ? todayData.orderdMenu.length : 0}
+        {(todayData ? todayData.orderdMenu.length : 0) +
+          (periodData ? periodData.orderdMenu.length : 0)}
         개)
       </div>
       <div>
@@ -141,21 +140,45 @@ export default function SettlementView() {
         </div>
       </div>
 
-      {todayData && todayData.orderdMenu ? (
-        todayData.orderdMenu.map((data, index) => (
-          <div
-            key={index + 1}
-            className="flex h-[40px] flex items-center text-center"
-          >
-            <div className="w-1/6">{index + 1}</div>
-            <div className="w-3/6">{data.menu}</div>
-            <div className="w-2/6">{data.price} 원</div>
-            <div className="w-2/6">x {data.count}</div>
-            <div></div>
-          </div>
-        ))
+      {periodData?.orderdMenu || todayData?.orderdMenu ? (
+        <div>
+          {periodData &&
+            periodData.orderdMenu &&
+            periodData.orderdMenu.map((data: any, index: any) => (
+              <div key={index}>
+                <div>
+                  {data.map((menuItem: any, subIndex: any) => (
+                    <div
+                      key={subIndex}
+                      className="flex h-[40px] flex items-center text-center"
+                    >
+                      <div className="w-1/6">{subIndex + 1}</div>
+                      <div className="w-3/6">{menuItem.menu}</div>
+                      <div className="w-2/6">{menuItem.price} 원</div>
+                      <div className="w-2/6">x {menuItem.count}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+          {todayData &&
+            todayData.orderdMenu &&
+            todayData.orderdMenu.map((data, index) => (
+              <div
+                key={index + 1}
+                className="flex h-[40px] flex items-center text-center"
+              >
+                <div className="w-1/6">{index + 1}</div>
+                <div className="w-3/6">{data.menu}</div>
+                <div className="w-2/6">{data.price} 원</div>
+                <div className="w-2/6">x {data.count}</div>
+                <div></div>
+              </div>
+            ))}
+        </div>
       ) : (
-        <div>Loading...</div>
+        <div>정산 내역이 없습니다..</div>
       )}
     </div>
   );
