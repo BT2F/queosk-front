@@ -6,12 +6,13 @@ interface HeaderProps extends HTMLAttributes<HTMLDivElement>{
   storeId?: string | string[];
   onClick?: () => void;
 }
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export default function WaitingTopHeader (props:HeaderProps) {
   return (
-    <div className={`flex text-xl py-4 px-6 font-bold ${props.className}`}>
-      {props.linkOrButton ? (
-        <Link href={`/store/${props.storeId}`} className="mr-3">
+    <div className={`flex text-2xl py-4 px-6 font-bold ${className}`}>
+      {linkOrButton ? (
+        <Link href={`/store/${storeId}`} className="mr-3">
           &#8592;
         </Link>
       ) : (
