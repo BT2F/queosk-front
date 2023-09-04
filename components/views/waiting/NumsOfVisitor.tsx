@@ -1,22 +1,21 @@
 import WaitingRegistration from './WaitingResistration';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import WaitingLayOut from '../waiting/WaitingLayOut';
-import WaitingTopHeader from '../waiting/WaitingTopHeader';
-import WaitingButton from '../waiting/WaitingButton';
+import WaitingLayOut from '../../waiting/WaitingLayOut';
+import WaitingTopHeader from '../../waiting/WaitingTopHeader';
+import WaitingButton from '../../waiting/WaitingButton';
 
 interface numOfCountProps {
-  numOfCount?:number;
+  numOfCount?: number;
 }
 
-
-export default function NumsOfVisitor({numOfCount}: numOfCountProps) {
+export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
   const [count, setCount] = useState(numOfCount ? numOfCount : 1);
   const [showNextComponent, setShowNextComponent] = useState(false);
   const router = useRouter();
   const { storeId } = router.query;
-  
-  console.log(showNextComponent)
+
+  console.log(showNextComponent);
 
   return (
     <>
@@ -71,7 +70,13 @@ export default function NumsOfVisitor({numOfCount}: numOfCountProps) {
               <span>방문 인원</span>
               <span>총 {count} 명</span>
             </div>
-            <WaitingButton children="다음" onClick={()=> {setShowNextComponent((prevValue) => !prevValue)}} />
+            <WaitingButton
+              className="mb-5"
+              children="다음"
+              onClick={() => {
+                setShowNextComponent((prevValue) => !prevValue);
+              }}
+            />
           </div>
         </WaitingLayOut>
       )}
