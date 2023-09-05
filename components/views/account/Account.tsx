@@ -37,7 +37,29 @@ export default function Account() {
     }
   }
 
-  console.log(validText)
+
+  const handleProfileUpload = async () => {
+    try {
+      const updatedUserData =
+        imgUrl && nicknameValue
+          ? { ...userData, imageUrl: imgUrl, nickName: nicknameValue }
+          : { ...userData, imageUrl: imgUrl };
+
+      // 서버로 업데이트 된 유저 데이터를 전송
+      await axios.put(`${serverUrl}/api/users/`, updatedUserData)
+      // 성공적으로 업데이트 되면 모달을 닫고 데이터를 업데이트
+      setUserData(updatedUserData);
+      setNicknameValue('')
+      setImgUrl(userData.imageUrl)
+      setProfileModal(false);
+    } catch (error) {
+      console.error('프로필 업데이트 오류', error)
+    }
+  };
+  
+  console.log(userData)
+  console.log(nicknameValue)
+  console.log(imgUrl)
   
   useEffect (() => {
     const axiosUserData =  async () => {
@@ -45,7 +67,7 @@ export default function Account() {
         const response = await axios.get(`${serverUrl}/api/users`);
         const data = response.data;
         setUserData(data);
-        setImgUrl(userData.imageUrl);
+        setImgUrl(data.imageUrl);
       } catch (error) {
         console.error('데이터 로드 오류', error);
       }
@@ -53,7 +75,9 @@ export default function Account() {
     
     axiosUserData();
     } ,[])
-  
+
+    console.log(validText)
+
   return (
     <>
       {profileModal && (
@@ -76,16 +100,23 @@ export default function Account() {
                   />
                 </Modal.ProfileInfoContainer>
                 <div className="button-container flex justify-around">
-                  <Modal.Btn className={'w-2/5'} children={'수정'} disabled={
-                    validText === null || validText === false
-                  }/>
+                  <Modal.Btn
+                    className={'w-2/5'}
+                    children={'수정'}
+                    disabled={true}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleProfileUpload();
+                    }}
+                  />
                   <Modal.Btn
                     className={'w-2/5'}
                     children={'취소'}
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
-                      setImgUrl('');
+                      setNicknameValue('')
+                      setImgUrl(userData.imageUrl)
                       setProfileModal(false);
                     }}
                   />

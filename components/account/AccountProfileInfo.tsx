@@ -14,7 +14,7 @@ export default function AccountProfileInfo(props: ProfileProps) {
           <img
             src={props.imgUrl}
             alt="프로필 이미지"
-            className="w-20 h-20 border rounded-full text-center"
+            className="w-24 h-24 border rounded-full text-center object-cover"
           />
         </div>
         <div className="profile-text flex-1">
