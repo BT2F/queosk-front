@@ -2,9 +2,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { ChangeEvent, useState } from 'react';
 
 interface FormData {
-  menuImg: File;
-  menuName: string;
-  menuPrice: string;
+  image: File;
+  name: string;
+  price: number;
 }
 
 interface AddFormProps {
@@ -16,11 +16,11 @@ export default function AddForm({ menuData }: AddFormProps) {
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
 
-  const handleNameChange = (event: any) => {
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputName(event.target.value);
   };
 
-  const handlePriceChange = (event: any) => {
+  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputPrice(event.target.value);
   };
 
@@ -38,7 +38,7 @@ export default function AddForm({ menuData }: AddFormProps) {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const newData = { fileImage, ...data };
+    const newData = { imageUrl: fileImage, ...data };
 
     menuData(newData);
     handleClick();
@@ -56,7 +56,7 @@ export default function AddForm({ menuData }: AddFormProps) {
       <div className="flex justify-between items-center ">
         <div className="font-semibold text-xl my-6">메뉴 등록</div>
         <button
-          className="w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
+          className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
           type="submit"
           onClick={handleSubmit(onSubmit)}
         >
@@ -67,41 +67,34 @@ export default function AddForm({ menuData }: AddFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <div className="flex items-center gap-3 mb-[6px]">
           <input
-            {...register('menuName', {
+            {...register('name', {
               required: true,
             })}
             type="text"
             placeholder="메뉴명"
-            className="border border-zinc-400 rounded-lg pl-3 py-1"
+            className="input input-bordered input-warning w-full max-w-xs"
             onChange={handleNameChange}
             value={inputName}
           />
           <input
-            {...register('menuPrice', {
+            {...register('price', {
               required: true,
             })}
             type="text"
             placeholder="가격"
-            className="border border-zinc-400 rounded-lg pl-3 py-1"
+            className="input input-bordered input-warning w-full max-w-xs"
             onChange={handlePriceChange}
             value={inputPrice}
           />
         </div>
         <div className="flex justify-between">
-          <label
-            htmlFor="fileInput"
-            className="px-6 py-2 rounded-[4px] border-2 border-[#FBBD23] text-sm font-semibold text-[#FBBD23] cursor-pointer"
-          >
-            이미지 업로드
-          </label>
           <input
-            {...register('menuImg', {
-              required: true,
+            {...register('image', {
+              required: false,
             })}
-            id="fileInput"
             type="file"
             placeholder="이미지"
-            className="hidden"
+            className="file-input file-input-bordered file-input-warning w-full max-w-xs"
             onChange={saveFileImage}
             value={inputFile}
           />
