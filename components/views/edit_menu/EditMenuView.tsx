@@ -1,26 +1,66 @@
 import AddForm from '@/components/edit_menu/AddForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from '@/lib/axios';
+import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 interface FormData {
-  menuImg: File;
-  menuName: string;
-  menuPrice: string;
-  fileImage?: string;
+  name: string;
+  price: number;
+  imageUrl?: string;
   id?: number;
+  status?: string;
 }
-
+interface NewDataType {
+  name: string;
+  price: number;
+  imageUrl?: string;
+}
 export default function EditMenuView() {
-  const [menuList, setMenuList] = useState<FormData[]>([]);
   const [checkedMenu, setCheckedMenu] = useState<string[]>([]);
+  const [menuData, setMenuData] = useState<FormData[]>([]);
+  const [newMenuData, setNewMenuData] = useState<NewDataType | undefined>();
   const [nextId, setNextId] = useState<number>(1);
 
-  const getInfo = (data: FormData) => {
-    const newData = { ...data, id: nextId };
-    setMenuList((prevMenuList) => [...prevMenuList, newData]);
-    setNextId(nextId + 1);
+  //식당 메뉴 목록 조회
+  const { data: menuListData, refetch: refetchMenuList } = useQuery<any, any>({
+    queryKey: ['menuList'],
+    queryFn: async () => {
+      const response = await axios.get('/api/restaurant/:id/menus');
+      return response.data;
+    },
+  });
 
-    console.log(menuList);
-    console.log(checkedMenu);
+  useEffect(() => {
+    refetchMenuList().then((data) => {
+      setMenuData(data?.data);
+    });
+  }, [newMenuData, menuListData]);
+
+  //식당 메뉴 목록 추가
+  const addNewMenuMutation = useMutation(
+    async (newMenuData: NewDataType) => {
+      const response = await axios.post('/api/restaurant/menus', newMenuData);
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (newMenuData) {
+      addNewMenuMutation.mutate(newMenuData);
+    }
+  }, [newMenuData]);
+
+  const getInfo = (data: FormData) => {
+    const { name, imageUrl, price } = data;
+    const newData = { imageUrl, name, price };
+    setNewMenuData(newData);
+    setNextId(nextId + 1);
   };
 
   const handleSingleCheck = (checked: boolean, id: number) => {
@@ -33,7 +73,7 @@ export default function EditMenuView() {
 
   const handleAllCheck = (checked: boolean) => {
     if (checked) {
-      const idArray = menuList.map((el) => el.id?.toString() as string);
+      const idArray = menuData.map((el: any) => el.id?.toString() as string);
       setCheckedMenu(idArray);
       console.log(idArray);
     } else {
@@ -42,10 +82,10 @@ export default function EditMenuView() {
   };
 
   const handleDelete = () => {
-    const updatedMenuList = menuList.filter(
+    const updatedMenuList = menuData.filter(
       (menu) => !checkedMenu.includes(menu.id?.toString() as string)
     );
-    setMenuList(updatedMenuList);
+    setMenuData(updatedMenuList);
     setCheckedMenu([]);
   };
 
@@ -69,7 +109,7 @@ export default function EditMenuView() {
                 type="checkbox"
                 onChange={(e) => handleAllCheck(e.target.checked)}
                 checked={
-                  menuList.length > 0 && checkedMenu.length === menuList.length
+                  menuData.length > 0 && checkedMenu.length === menuData.length
                 }
                 className="mx-auto"
               />
@@ -80,44 +120,52 @@ export default function EditMenuView() {
             <div className="w-2/6">이미지</div>
             <div className="w-2/6">관리</div>
           </div>
-          {menuList.map((data, index) => (
-            <div key={index} className="flex items-center text-center my-2">
-              <div className="px-5 py-auto">
-                <input
-                  type="checkbox"
-                  onChange={(e) =>
-                    handleSingleCheck(e.target.checked, data.id as number)
-                  }
-                  checked={checkedMenu.includes(data.id?.toString() as string)}
-                />
-              </div>
-              <div className="w-1/6">{index + 1}</div>
-              <div className="w-3/6">{data.menuName}</div>
-              <div className="w-2/6">{data.menuPrice} 원</div>
-              {data.fileImage ? (
-                <div className="w-2/6">
-                  <img
-                    className="w-[40px] h-[40px] mx-auto"
-                    src={data.fileImage}
-                    alt="메뉴이미지"
+          {menuData ? (
+            menuData.map((data, index) => (
+              <div key={index} className="flex items-center text-center my-2">
+                <div className="px-5 py-auto">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleSingleCheck(e.target.checked, data.id as number)
+                    }
+                    checked={checkedMenu.includes(
+                      data.id?.toString() as string
+                    )}
                   />
                 </div>
-              ) : (
+                <div className="w-1/6">{index + 1}</div>
+                <div className="w-3/6">{data.name}</div>
+                <div className="w-2/6">{data.price} 원</div>
+                {data.imageUrl ? (
+                  <div className="w-2/6">
+                    <img
+                      className="w-[40px] h-[40px] mx-auto"
+                      src={data.imageUrl}
+                      alt="메뉴이미지"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-2/6">
+                    <img
+                      className="w-[40px] h-[40px] mx-auto"
+                      src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
+                      alt="이미지없음"
+                    />
+                  </div>
+                )}
                 <div className="w-2/6">
-                  <img
-                    className="w-[40px] h-[40px] mx-auto"
-                    src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-                    alt="이미지없음"
-                  />
+                  {data.status === 'ON_SALE' ? (
+                    <div>판매중</div>
+                  ) : (
+                    <div>품절</div>
+                  )}
                 </div>
-              )}
-              <div className="w-2/6">
-                <button className="btn btn-sm w-[70px] border border-[#FBBD23] bg-white rounded-2xl py-1">
-                  품절
-                </button>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>메뉴 없음</div>
+          )}
         </div>
       </div>
     </div>
