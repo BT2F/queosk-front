@@ -13,7 +13,7 @@ export default function useAuth() {
   ) => {
     if (type !== 'OAuth') {
       await axios
-        .post(`/api/${type}/signin`, data)
+        .post(`/api/${type}s/signin`, data)
         .then((res) => {
           const { accessToken, refreshToken, ...userData } = res.data;
           setUser(userData);
