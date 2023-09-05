@@ -3,7 +3,7 @@ import { default as axiosDefault } from 'axios';
 import { toast } from 'react-toastify';
 
 const proxyOptions =
-  process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+  process.env.NEXT_PUBLIC_API_MOCKING !== 'enabled'
     ? {
         proxy: {
           protocol: 'http',
@@ -41,7 +41,7 @@ axios.interceptors.response.use(
   async (err) => {
     const {
       config,
-      response: { status },
+      request: { status },
     } = err;
 
     if (status === 401) {
