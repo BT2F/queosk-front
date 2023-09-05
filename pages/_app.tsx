@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MSWWraaper from '@/components/msw/MSWWraaper';
+import RootLayout from '@/components/common/RootLayout';
 
 const client = new QueryClient({
   defaultOptions: {
@@ -16,11 +17,13 @@ const client = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <MSWWraaper>
-      <QueryClientProvider client={client}>
-        <Component {...pageProps} />
-        <ToastContainer />
-      </QueryClientProvider>
-    </MSWWraaper>
+    <RootLayout>
+      <MSWWraaper>
+        <QueryClientProvider client={client}>
+          <Component {...pageProps} />
+          <ToastContainer />
+        </QueryClientProvider>
+      </MSWWraaper>
+    </RootLayout>
   );
 }
