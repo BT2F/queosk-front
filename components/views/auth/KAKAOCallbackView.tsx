@@ -7,6 +7,7 @@ export default function KakaoCallbackView() {
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const { signIn } = useAuth();
+
   useEffect(() => {
     const signWithKAKAO = async (code: string) => {
       // console.log('카카오 로그인 시도중');

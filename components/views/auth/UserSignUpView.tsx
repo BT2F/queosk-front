@@ -7,8 +7,11 @@ import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import Link from 'next/link';
+import useAuth from '@/hooks/useAuth';
 
 export default function UserSignUpView() {
+  const { signUp, OAuthRedirect } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -62,11 +65,11 @@ export default function UserSignUpView() {
   };
 
   const onClickKAKAOLogin = async () => {
-    console.log('카카오 회원가입');
+    OAuthRedirect('kakao');
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    await signUp(data);
   });
   return (
     <SignLayout className="!min-h-[750px]">

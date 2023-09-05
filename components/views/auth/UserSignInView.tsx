@@ -8,8 +8,11 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import Input from '@/components/common/Input';
 import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import Link from 'next/link';
+import useAuth from '@/hooks/useAuth';
 
 export default function UserSignInView() {
+  const { signIn, OAuthRedirect } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -44,11 +47,11 @@ export default function UserSignInView() {
   const inputItems = Object.keys(formRegister);
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    await signIn(data, 'user');
   });
 
   const onClickKAKAOLogin = (e: FormEvent<HTMLButtonElement>) => {
-    console.log('카카오 로그인 클릭');
+    OAuthRedirect('kakao');
   };
 
   return (

@@ -7,10 +7,12 @@ import Layout from '@/components/auth/layout/BusinessSignUpLayout';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import Link from 'next/link';
+import useAuth from '@/hooks/useAuth';
 
 export default function OwnerSignUpView() {
   const open = useDaumPostcodePopup();
   const [addressValue, setAddressValue] = useState('');
+  const { signUp } = useAuth();
 
   const {
     register,
@@ -34,21 +36,6 @@ export default function OwnerSignUpView() {
     address: '주소 ( 클릭시 주소 팝업 )',
     addressDetail: '상세 주소 (생략가능)',
   };
-
-  /**
-   *
-   * ownerId : 사업자 아이디
-   * ownerName: 사업자 이름
-   * password : 비밀번호
-   * email: 이메일
-   * phone: 전화번호
-   * restaurantPhone : 전화번호
-   * restaurantName: 식당이름
-   * category : 한식|중식|일식|기타
-   * businessNumber 123-45-67890
-   * businessStartDate : 20230822
-   * address: 주소
-   */
 
   const formRegister: IFormRegister = {
     email: {
@@ -168,7 +155,7 @@ export default function OwnerSignUpView() {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    await signUp(data, 'restaurant');
   });
 
   return (

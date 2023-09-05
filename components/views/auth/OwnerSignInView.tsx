@@ -1,13 +1,17 @@
-import { useForm } from 'react-hook-form';
-import { IFormRegister } from '@/types/auth.type';
-import { regx } from '@/lib/regx';
 import Layout from '@/components/auth/layout/SignLayout';
-import Input from '@/components/common/Input';
-import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import Button from '@/components/common/Button';
+import Input from '@/components/common/Input';
+import useAuth from '@/hooks/useAuth';
+import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
+import { regx } from '@/lib/regx';
+import { IFormRegister } from '@/types/auth.type';
 import Link from 'next/link';
 
+import { useForm } from 'react-hook-form';
+
 export default function OwnerSignInView() {
+  const { signIn } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -40,7 +44,7 @@ export default function OwnerSignInView() {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    await signIn(data, 'restaurant');
   });
 
   return (
