@@ -1,20 +1,39 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 
 interface FormData {
   image: File;
   name: string;
   price: number;
+  imageUrl?: string;
 }
 
 interface AddFormProps {
-  menuData: (data: FormData) => void;
+  menuData: (data: FormData, menuIndex?: number | null) => void;
+  isEditMode: boolean;
+  editingMenuData: FormData | null;
 }
-export default function AddForm({ menuData }: AddFormProps) {
+export default function AddForm({
+  menuData,
+  isEditMode,
+  editingMenuData,
+}: AddFormProps) {
   const [fileImage, setFileImage] = useState('');
   const [inputName, setInputName] = useState('');
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
+
+  useEffect(() => {
+    if (isEditMode && editingMenuData) {
+      setInputName(editingMenuData.name);
+      setInputPrice(editingMenuData.price.toString());
+      setFileImage(editingMenuData.imageUrl || '');
+    } else {
+      setFileImage('');
+      setInputName('');
+      setInputPrice('');
+    }
+  }, [isEditMode, editingMenuData]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputName(event.target.value);
@@ -39,7 +58,6 @@ export default function AddForm({ menuData }: AddFormProps) {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const newData = { imageUrl: fileImage, ...data };
-
     menuData(newData);
     handleClick();
   };
@@ -54,13 +72,15 @@ export default function AddForm({ menuData }: AddFormProps) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center ">
-        <div className="font-semibold text-xl my-6">메뉴 등록</div>
+        <div className="font-semibold text-xl my-6">
+          {isEditMode ? '메뉴 편집' : '메뉴 등록'}
+        </div>
         <button
           className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
           type="submit"
           onClick={handleSubmit(onSubmit)}
         >
-          추가
+          {isEditMode ? '수정' : '추가'}
         </button>
       </div>
 

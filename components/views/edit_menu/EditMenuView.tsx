@@ -12,6 +12,7 @@ interface FormData {
   status?: string;
 }
 interface NewDataType {
+  id?: number;
   name: string;
   price: number;
   imageUrl?: string;
@@ -21,6 +22,11 @@ export default function EditMenuView() {
   const [menuData, setMenuData] = useState<FormData[]>([]);
   const [newMenuData, setNewMenuData] = useState<NewDataType | undefined>();
   const [nextId, setNextId] = useState<number>(1);
+
+  //메뉴 편집
+  const [isEditClicked, setIsEditClicked] = useState(false);
+  const [editingMenu, setEditingMenu] = useState<any | null>(null);
+  const [menuId, setMenuId] = useState<string | null>(null);
 
   //식당 메뉴 목록 조회
   const { data: menuListData, refetch: refetchMenuList } = useQuery<any, any>({
@@ -56,11 +62,45 @@ export default function EditMenuView() {
     }
   }, [newMenuData]);
 
+  //식당 메뉴 정보(이름, 가격) 수정
+  const editMenuInfoMutation = useMutation(
+    async (editMenuInfo: any) => {
+      const response = await axios.put(
+        `/api/restaurant/menus/${menuId}`,
+        editMenuInfo
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
+  const handleUpdateMenu = (
+    menuId: string,
+    infoData: { name: string; price: number }
+  ) => {
+    if (checkedMenu.length > 0) {
+      setMenuId(menuId);
+      editMenuInfoMutation.mutate({ menuId, ...infoData });
+    }
+  };
+
   const getInfo = (data: FormData) => {
     const { name, imageUrl, price } = data;
     const newData = { imageUrl, name, price };
-    setNewMenuData(newData);
+    const infoData = { name, price };
     setNextId(nextId + 1);
+    if (isEditClicked === true && checkedMenu.length > 0) {
+      const menuId = checkedMenu[0];
+      handleUpdateMenu(menuId, infoData);
+    } else {
+      setNewMenuData(newData);
+    }
+    setIsEditClicked(false);
+    setCheckedMenu([]);
   };
 
   const handleSingleCheck = (checked: boolean, id: number) => {
@@ -89,18 +129,42 @@ export default function EditMenuView() {
     setCheckedMenu([]);
   };
 
+  const handleEditClick = () => {
+    if (checkedMenu.length > 0) {
+      const firstMenu = menuData.find(
+        (menu) => menu.id?.toString() === checkedMenu[0]
+      );
+      if (firstMenu) {
+        setIsEditClicked(true);
+        setEditingMenu(firstMenu);
+      }
+    }
+  };
+
   return (
     <div className="w-4/5 mx-auto my-0">
-      <AddForm menuData={getInfo} />
+      <AddForm
+        menuData={getInfo}
+        isEditMode={isEditClicked}
+        editingMenuData={editingMenu}
+      />
       <div>
         <div className="flex justify-between items-center">
           <div className="font-bold text-xl my-6">메뉴 목록</div>
-          <button
-            className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
-            onClick={handleDelete}
-          >
-            삭제
-          </button>
+          <div>
+            <button
+              className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white mr-5"
+              onClick={handleDelete}
+            >
+              삭제
+            </button>
+            <button
+              className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
+              onClick={handleEditClick}
+            >
+              편집
+            </button>
+          </div>
         </div>
         <div>
           <div className="h-[40px] flex items-center text-center border-y-[2px] border-zinc-300 font-bold">
