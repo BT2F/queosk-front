@@ -2,18 +2,7 @@ import { AUTH_KEY, AUTH_MESSAGE } from '@/constants/auth';
 import { default as axiosDefault } from 'axios';
 import { toast } from 'react-toastify';
 
-const proxyOptions =
-  process.env.NEXT_PUBLIC_API_MOCKING !== 'enabled'
-    ? {
-        proxy: {
-          protocol: 'http',
-          host: process.env.NEXT_PUBLIC_API_URL || 'localhost',
-          port: +(process.env.NEXT_PUBLIC_API_PORT || 3000),
-        },
-      }
-    : {};
-
-const axios = axiosDefault.create({ ...proxyOptions });
+const axios = axiosDefault.create();
 
 const isDev = process.env.NODE_ENV === 'development';
 // 요청 인터셉터
