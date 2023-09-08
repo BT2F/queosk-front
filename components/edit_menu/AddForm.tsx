@@ -6,6 +6,7 @@ interface FormData {
   name: string;
   price: number;
   imageUrl?: string;
+  status?: 'ON_SALE' | 'SOLD_OUT';
 }
 
 interface AddFormProps {
@@ -23,6 +24,7 @@ export default function AddForm({
   const [inputName, setInputName] = useState('');
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
+  const [inputStatus, setInputStatus] = useState<'판매중' | '품절'>('판매중');
 
   useEffect(() => {
     if (isEditMode && editingMenuData) {
@@ -42,6 +44,10 @@ export default function AddForm({
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputPrice(event.target.value);
+  };
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setInputStatus(event.target.value as '판매중' | '품절');
   };
 
   const handleClick = () => {
@@ -122,10 +128,23 @@ export default function AddForm({
             })}
             type="file"
             placeholder="이미지"
-            className="file-input file-input-bordered file-input-warning w-full max-w-xs"
+            className="file-input file-input-bordered file-input-warning w-2/3 max-w-xs"
             onChange={saveFileImage}
             value={inputFile}
           />
+          {isEditMode && (
+            <select
+              {...register('status', {
+                required: true,
+              })}
+              className="input input-bordered input-warning w-1/3 max-w-xs"
+              onChange={handleStatusChange}
+              value={inputStatus}
+            >
+              <option value="ON_SALE">판매중</option>
+              <option value="SOLD_OUT">품절</option>
+            </select>
+          )}
         </div>
         {imageUrlSave && (
           <img alt="sample" src={imageUrlSave} className="w-[250px]" />

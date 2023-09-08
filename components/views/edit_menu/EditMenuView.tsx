@@ -25,6 +25,7 @@ interface EditDataType {
   price?: number;
   imageUrl?: string;
   imageFile?: File;
+  status?: string;
 }
 export default function EditMenuView() {
   const [checkedMenu, setCheckedMenu] = useState<string[]>([]);
@@ -127,9 +128,31 @@ export default function EditMenuView() {
     }
   );
 
+  //메뉴 주문가능여부 상태 수정
+  const editMenuStatusMutation = useMutation(
+    async (status: EditDataType) => {
+      const response = await axios.put(
+        `/api/restaurant/menus/${menuId}/status`,
+        status
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
   const handleUpdateMenu = (
     menuId: string,
-    editData: { name: string; price: number; imageUrl: string; imageFile: File }
+    editData: {
+      name: string;
+      price: number;
+      imageUrl: string;
+      imageFile: File;
+      status: string;
+    }
   ) => {
     if (checkedMenu.length > 0) {
       setMenuId(menuId);
@@ -138,20 +161,21 @@ export default function EditMenuView() {
 
       const { imageFile } = editData;
       editMenuImageMutation.mutate({ menuId, imageFile });
-      console.log(imageFile);
-      console.log({ menuId, imageFile });
+
+      const { status } = editData;
+      editMenuStatusMutation.mutate({ menuId, status });
     }
   };
 
   const getInfo = (data: any) => {
-    const { name, imageUrl, price, imageFile } = data;
+    console.log(data);
+    const { name, imageUrl, price, imageFile, status } = data;
     const newData = { imageUrl, name, price };
-    const editData = { name, price, imageUrl, imageFile };
-    console.log(editData.imageFile);
+    const editData = { name, price, imageUrl, imageFile, status };
     setNextId(nextId + 1);
     if (isEditClicked === true && checkedMenu.length > 0) {
       const menuId = checkedMenu[0];
-      if (!!imageUrl) {
+      if (imageUrl) {
         handleUpdateMenu(menuId, editData);
       }
     } else {
