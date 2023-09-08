@@ -18,7 +18,8 @@ export default function AddForm({
   isEditMode,
   editingMenuData,
 }: AddFormProps) {
-  const [fileImage, setFileImage] = useState('');
+  const [imageUrlSave, setImageUrlSave] = useState('');
+  const [imageFileSave, setImageFileSave] = useState<File>();
   const [inputName, setInputName] = useState('');
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
@@ -27,9 +28,9 @@ export default function AddForm({
     if (isEditMode && editingMenuData) {
       setInputName(editingMenuData.name);
       setInputPrice(editingMenuData.price.toString());
-      setFileImage(editingMenuData.imageUrl || '');
+      setImageUrlSave(editingMenuData.imageUrl || '');
     } else {
-      setFileImage('');
+      setImageUrlSave('');
       setInputName('');
       setInputPrice('');
     }
@@ -44,7 +45,7 @@ export default function AddForm({
   };
 
   const handleClick = () => {
-    setFileImage('');
+    setImageUrlSave('');
     setInputName('');
     setInputPrice('');
     setInputFile('');
@@ -57,14 +58,21 @@ export default function AddForm({
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const newData = { imageUrl: fileImage, ...data };
+    const newData = {
+      imageUrl: imageUrlSave,
+      imageFile: imageFileSave,
+      ...data,
+    };
+    console.log(newData);
     menuData(newData);
     handleClick();
   };
 
   const saveFileImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFileImage(URL.createObjectURL(e.target.files[0]));
+      setImageUrlSave(URL.createObjectURL(e.target.files[0]));
+      setImageFileSave(e.target.files[0]);
+      console.log(e.target.files[0]);
     }
     setInputFile(e.target.value);
   };
@@ -119,8 +127,8 @@ export default function AddForm({
             value={inputFile}
           />
         </div>
-        {fileImage && (
-          <img alt="sample" src={fileImage} className="w-[250px]" />
+        {imageUrlSave && (
+          <img alt="sample" src={imageUrlSave} className="w-[250px]" />
         )}
       </form>
     </div>

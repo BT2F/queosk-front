@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 
 interface FormData {
+  imageFile: File;
   name: string;
   price: number;
   imageUrl?: string;
@@ -13,14 +14,23 @@ interface FormData {
 }
 interface NewDataType {
   id?: number;
-  name: string;
-  price: number;
+  name?: string;
+  price?: number;
   imageUrl?: string;
+  imageFile?: File;
+}
+interface EditDataType {
+  menuId: string;
+  name?: string;
+  price?: number;
+  imageUrl?: string;
+  imageFile?: File;
 }
 export default function EditMenuView() {
   const [checkedMenu, setCheckedMenu] = useState<string[]>([]);
   const [menuData, setMenuData] = useState<FormData[]>([]);
-  const [newMenuData, setNewMenuData] = useState<NewDataType | undefined>();
+  const [newMenuData, setNewMenuData] = useState<NewDataType>();
+  const [newImage, setNewImage] = useState<NewDataType>();
   const [nextId, setNextId] = useState<number>(1);
 
   //메뉴 편집
@@ -62,9 +72,32 @@ export default function EditMenuView() {
     }
   }, [newMenuData]);
 
+  //메뉴 이미지 업로드 후 가져오기
+  const addNewImageMutation = useMutation(
+    async (newImage: NewDataType) => {
+      const response = await axios.post(
+        '/api/restaurant/menus/image',
+        newImage
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (newImage) {
+      addNewImageMutation.mutate(newImage);
+      console.log(newImage);
+    }
+  }, [newImage]);
+
   //식당 메뉴 정보(이름, 가격) 수정
   const editMenuInfoMutation = useMutation(
-    async (editMenuInfo: any) => {
+    async (editMenuInfo: EditDataType) => {
       const response = await axios.put(
         `/api/restaurant/menus/${menuId}`,
         editMenuInfo
@@ -78,26 +111,52 @@ export default function EditMenuView() {
     }
   );
 
+  //메뉴 이미지 수정
+  const editMenuImageMutation = useMutation(
+    async (imageFile: EditDataType) => {
+      const response = await axios.put(
+        `/api/restaurant/menus/${menuId}/image`,
+        imageFile
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
   const handleUpdateMenu = (
     menuId: string,
-    infoData: { name: string; price: number }
+    editData: { name: string; price: number; imageUrl: string; imageFile: File }
   ) => {
     if (checkedMenu.length > 0) {
       setMenuId(menuId);
-      editMenuInfoMutation.mutate({ menuId, ...infoData });
+      const { name, price } = editData;
+      editMenuInfoMutation.mutate({ menuId, name, price });
+
+      const { imageFile } = editData;
+      editMenuImageMutation.mutate({ menuId, imageFile });
+      console.log(imageFile);
+      console.log({ menuId, imageFile });
     }
   };
 
-  const getInfo = (data: FormData) => {
-    const { name, imageUrl, price } = data;
+  const getInfo = (data: any) => {
+    const { name, imageUrl, price, imageFile } = data;
     const newData = { imageUrl, name, price };
-    const infoData = { name, price };
+    const editData = { name, price, imageUrl, imageFile };
+    console.log(editData.imageFile);
     setNextId(nextId + 1);
     if (isEditClicked === true && checkedMenu.length > 0) {
       const menuId = checkedMenu[0];
-      handleUpdateMenu(menuId, infoData);
+      if (!!imageUrl) {
+        handleUpdateMenu(menuId, editData);
+      }
     } else {
       setNewMenuData(newData);
+      setNewImage(imageFile);
     }
     setIsEditClicked(false);
     setCheckedMenu([]);
