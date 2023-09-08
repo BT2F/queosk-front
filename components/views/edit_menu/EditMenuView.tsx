@@ -143,7 +143,6 @@ export default function EditMenuView() {
       },
     }
   );
-
   const handleUpdateMenu = (
     menuId: string,
     editData: {
@@ -164,6 +163,37 @@ export default function EditMenuView() {
 
       const { status } = editData;
       editMenuStatusMutation.mutate({ menuId, status });
+    }
+  };
+
+  //메뉴 삭제
+  const deleteMenuMutation = useMutation(
+    async (deleteMenu: any) => {
+      const response = await axios.delete(
+        `/api/restaurant/menus/${menuId}`,
+        deleteMenu
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        refetchMenuList();
+      },
+    }
+  );
+
+  const handleDelete = () => {
+    // const updatedMenuList = menuData.filter(
+    //   (menu) => !checkedMenu.includes(menu.id?.toString() as string)
+    // );
+    // setMenuData(updatedMenuList);
+    // setCheckedMenu([]);
+
+    if (checkedMenu != null) {
+      checkedMenu.forEach((menuId) => {
+        setMenuId(menuId);
+        deleteMenuMutation.mutate(menuId);
+      });
     }
   };
 
@@ -202,14 +232,6 @@ export default function EditMenuView() {
     } else {
       setCheckedMenu([]);
     }
-  };
-
-  const handleDelete = () => {
-    const updatedMenuList = menuData.filter(
-      (menu) => !checkedMenu.includes(menu.id?.toString() as string)
-    );
-    setMenuData(updatedMenuList);
-    setCheckedMenu([]);
   };
 
   const handleEditClick = () => {
