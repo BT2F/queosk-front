@@ -9,7 +9,7 @@ interface ILocationError {
   code: number;
   message: string;
 }
-interface IGeolocation {
+export interface IGeolocation {
   onLoad: boolean;
   coords?: ILocationCoords;
   error?: ILocationError;
@@ -29,7 +29,7 @@ export default function useLocation() {
 
   const onError = (error: ILocationError) => {
     setLocation({
-      onLoad: false,
+      onLoad: true,
       error,
     });
   };
