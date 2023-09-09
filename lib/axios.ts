@@ -28,12 +28,9 @@ axios.interceptors.response.use(
     return res;
   },
   async (err) => {
-    const {
-      config,
-      request: { status },
-    } = err;
+    const { config, request } = err;
 
-    if (status === 401) {
+    if (request.status === 401) {
       // 비 인증 상태 일때
       return await axios
         .post(
@@ -66,7 +63,7 @@ axios.interceptors.response.use(
         });
     }
 
-    isDev && console.error(`요청 에러 ( 에러코드 : ${status} ) `, err);
+    isDev && console.error(`요청 에러 ( 에러코드 : ${request.status} ) `, err);
 
     return Promise.reject(err);
   },
