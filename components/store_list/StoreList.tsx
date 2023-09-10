@@ -52,7 +52,11 @@ export default function StoreList({ location }: Props) {
         pageStart={0}
         loadMore={() => fetchNextPage()}
         hasMore={isNextPage()}
-        loader={<LoadingStoreList />}
+        loader={
+          <div className="flex justify-center">
+            <span className="loading loading-dots loading-lg" />
+          </div>
+        }
       >
         {data?.pages.length &&
           data.pages.map((pageGroup, i) => (

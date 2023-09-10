@@ -1,20 +1,20 @@
 import Image from 'next/image';
 import { IStoreRes } from '@/types/storeList.type';
 import Link from 'next/link';
+import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 
 export default function StoreCard(props: IStoreRes) {
   return (
     <Link
       href={`/store/${props.id}`}
-      className="card card-side bg-base-100 shadow-xl [&+&]:mt-4"
+      className="card card-side bg-base-100 shadow-xl [&+&]:mt-4 h-[128px]"
     >
-      <figure className="!min-w-[100px]">
+      <figure className="relative !w-[128px]">
         <Image
-          src={props.imageUrl}
+          src={props.imageUrl || placeholderImgUrl('128x128')}
+          className="w-[128px]"
+          fill={true}
           alt="Movie"
-          width={100}
-          height={100}
-          objectFit="cover"
         />
       </figure>
       <div className="card-body !p-5">
