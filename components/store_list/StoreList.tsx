@@ -57,11 +57,16 @@ export default function StoreList({ location }: Props) {
         {data?.pages.length &&
           data.pages.map((pageGroup, i) => (
             <Fragment key={`page_group_${i}`}>
-              {pageGroup.content?.map((v: IStoreRes) => (
-                <StoreCard {...v} key={`store-list-key-${v.restaurantName}`} />
-              )) || (
-                <div className="font-xl flex justify-center items-center mt-5">
-                  해당하는 가게가 존재하지 않습니다!
+              {pageGroup.content.length ? (
+                pageGroup.content.map((v: IStoreRes) => (
+                  <StoreCard
+                    {...v}
+                    key={`store-list-key-${v.restaurantName}`}
+                  />
+                ))
+              ) : (
+                <div className="flex justify-center items-center mt-5 font-xl">
+                  해당하는 매장이 없습니다!
                 </div>
               )}
             </Fragment>
