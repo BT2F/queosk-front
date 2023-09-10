@@ -2,7 +2,12 @@
 
 const nextConfig = {
   images: {
-    domains: ['localhost', 'placehold.co', '*'],
+    remotePatterns: [
+      {
+        hostname: '**',
+      },
+    ],
+    dangerouslyAllowSVG: true,
   },
   async rewrites() {
     return [

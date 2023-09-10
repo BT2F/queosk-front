@@ -163,7 +163,7 @@ export const restaurantHandler = [
   }),
 
   // 매장 조회
-  rest.get('/api/restaurants', (req, res, ctx) => {
+  rest.get('/api/restaurants/coord', (req, res, ctx) => {
     const size = +(req.url.searchParams.get('size') || 5);
     const page = +(req.url.searchParams.get('page') || 0);
 
