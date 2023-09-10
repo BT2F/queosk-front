@@ -58,8 +58,8 @@ axios.interceptors.response.use(
           // 인증 정보를 제거한다.
           localStorage.removeItem(AUTH_KEY.ACCESS_TOKEN);
           localStorage.removeItem(AUTH_KEY.REFRESH_TOKEN);
-
           toast.error(AUTH_MESSAGE.REFRESH_ERROR);
+          location.replace('/signin');
         });
     }
 
