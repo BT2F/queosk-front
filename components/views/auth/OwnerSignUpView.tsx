@@ -55,8 +55,8 @@ export default function OwnerSignUpView() {
       ...register('ownerId', {
         required: 'Id는 필수 입니다.',
         minLength: {
-          value: 5,
-          message: 'Id는 5자리 이상이여야 합니다.',
+          value: 4,
+          message: 'Id는 4자리 이상이여야 합니다.',
         },
       }),
     },
