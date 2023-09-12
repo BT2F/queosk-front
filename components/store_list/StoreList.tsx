@@ -36,7 +36,7 @@ export default function StoreList({ location }: Props) {
     queryKey: [STORE_LIST_KEY.STORE_LIST],
     queryFn: fetchFn,
 
-    getNextPageParam: (lastPage, pages) => {
+    getNextPageParam: (lastPage) => {
       return +lastPage.pageable.pageNumber + 1;
     },
   });
@@ -63,10 +63,7 @@ export default function StoreList({ location }: Props) {
             <Fragment key={`page_group_${i}`}>
               {pageGroup.content.length ? (
                 pageGroup.content.map((v: IStoreRes) => (
-                  <StoreCard
-                    {...v}
-                    key={`store-list-key-${v.restaurantName}`}
-                  />
+                  <StoreCard {...v} key={`store-list-key-${v.id}`} />
                 ))
               ) : (
                 <div className="flex justify-center items-center mt-5 font-xl">
