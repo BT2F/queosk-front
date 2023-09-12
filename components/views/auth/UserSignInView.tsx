@@ -1,14 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { IFormRegister } from '@/types/auth.type';
 import { regx } from '@/lib/regx';
-import { FormEvent } from 'react';
 import SignLayout from '@/components/auth/layout/SignLayout';
 import Button from '@/components/common/Button';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import Input from '@/components/common/Input';
-import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
+import fixInputLabel, { IFixInputLabel } from '@/lib/fixInputLabel';
 
 export default function UserSignInView() {
   const { signIn, OAuthRedirect } = useAuth();
@@ -50,7 +49,7 @@ export default function UserSignInView() {
     await signIn(data, 'user');
   });
 
-  const onClickKAKAOLogin = (e: FormEvent<HTMLButtonElement>) => {
+  const onClickKAKAOLogin = () => {
     OAuthRedirect('kakao');
   };
 
@@ -70,7 +69,7 @@ export default function UserSignInView() {
           {inputItems.map((key) => (
             <Input
               key={`user-sign-in-${key}`}
-              label={fixFirstCharUpperCase(key)}
+              label={fixInputLabel(key as IFixInputLabel)}
               errorText={(errors[key]?.message as string) || ''}
             >
               <Input.Field
