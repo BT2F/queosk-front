@@ -16,6 +16,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
   const router = useRouter();
   const { storeId } = router.query;
   const [storeData, setStoreData] = useState(Object)
+  const [queueData, setQueueData] = useState(Object)
   console.log(storeId);
 
   const handleResistration = async () => {
@@ -37,7 +38,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
   useEffect(() => {
     const getServerData = async () => {
       try {
-        const response = await axios.get(`/api/restaurants/1/details`);
+        const response = await axios.get(`/api/restaurants/${storeId}/details`);
         const data = response.data;
         setStoreData(data.restaurantDto);
       } catch (error) {
@@ -47,8 +48,11 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
     };
     const getStoreQueue = async () => {
       try {
-        const response = await axios.get(`/api/restaurants/queue/`);
+        const response = await axios.get(
+          `/api/restaurants/${storeId}/queue`
+        );
         const data = response.data;
+        setQueueData(data)
         console.log(data);
       } catch (error) {
         console.error('데이터 로드 오류', error);
@@ -78,11 +82,11 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
               <div className="number mx-5 border-2 rounded-lg text-xl font-bold p-5 flex justify-between py-6">
                 <div className="w-[50%] py-4 flex-col text-center">
                   <h2 className="text-gray-400 text-base">현재 웨이팅</h2>
-                  <h2>팀</h2>
+                  <h2>{queueData.totalQueue} 팀</h2>
                 </div>
                 <div className="w-[50%] py-4 flex-col text-center">
                   <h2 className="text-gray-400 text-base">예상 시간</h2>
-                  <h2>분</h2>
+                  <h2>{queueData.totalQueue * 15} 분</h2>
                 </div>
               </div>
             </div>
@@ -93,7 +97,10 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
           </div>
           <div className="waiting-footer fixed bottom-0 max-w-[80%] md:max-w-[640px] w-[100%]">
             <div className="flex-col">
-              <WaitingButton children={'웨이팅 등록하기'} onClick={handleResistration}/>
+              <WaitingButton
+                children={'웨이팅 등록하기'}
+                onClick={handleResistration}
+              />
             </div>
           </div>
         </WaitingLayOut>
