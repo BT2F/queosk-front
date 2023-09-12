@@ -1,13 +1,22 @@
 import WaitingRegistration from './WaitingResistration';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WaitingLayOut from '../../waiting/WaitingLayOut';
 import WaitingTopHeader from '../../waiting/WaitingTopHeader';
 import WaitingButton from '../../waiting/WaitingButton';
+import { NextPageContext } from 'next';
 
 interface numOfCountProps {
   numOfCount?: number;
 }
+interface storeIdProps {
+  storeId: string;
+}
+
+// export const getServerSideProps = async (context:NextPageContext) => {
+//   const {storeId} = context.query;
+//   return {props: { storeId }}
+// }
 
 export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
   const [count, setCount] = useState(numOfCount ? numOfCount : 1);
@@ -15,12 +24,24 @@ export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
   const router = useRouter();
   const { storeId } = router.query;
 
-  console.log(showNextComponent);
+  // useEffect(() => {
+  //   const getServerData = async () => {
+  //     try {
+  //       const response = await axios.get(`/api/restaurants/1/details`);
+  //       const data = response.data;
+  //       setStoreData(data.restaurantDto);
+  //     } catch (error) {
+  //       console.error('데이터 로드 오류', error);
+  //     }
+  //   };
+  //   getServerData();
+  // }, []);
+
 
   return (
     <>
       {showNextComponent ? (
-        <WaitingRegistration count={count} />
+        <WaitingRegistration count={count}/>
       ) : (
         <WaitingLayOut>
           <WaitingTopHeader

@@ -78,6 +78,7 @@ export default function Account() {
           const imgFormData = new FormData();
           imgFormData.append('image', imgData);
 
+          console.log(imgFormData)
           await axios.put(`/api/users/image`, imgFormData, {
             headers: {
               'content-Type': 'multipart/form-data',
@@ -142,7 +143,7 @@ export default function Account() {
       password: "123123"
     }
     try {
-      await axios.delete('api/users/', {data: sendPassword}).then((response) => {
+      await axios.delete('/api/users/', {data: sendPassword}).then((response) => {
         if (response.status === 204) {
           // 회원탈퇴 성공
           console.log('회원탈퇴 되었습니다');

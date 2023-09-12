@@ -1,9 +1,13 @@
-import NumOfVisitor from '@/components/views/waiting/NumsOfVisitor';
-
+import Waiting from '@/components/views/waiting/Waiting';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 export default function Page() {
+  const queryClient = new QueryClient();
+
   return (
     <>
-      <NumOfVisitor />
+      <QueryClientProvider client={queryClient}>
+        <Waiting />
+      </QueryClientProvider>
     </>
   );
 }
