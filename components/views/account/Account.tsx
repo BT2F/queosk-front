@@ -8,7 +8,6 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import axios from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { regx } from '@/lib/regx';
-import { useQuery } from '@tanstack/react-query';
 
 export default function Account() {
   const router = useRouter();
@@ -168,13 +167,6 @@ export default function Account() {
     };
     getServerData();
   }, []);
-
-  // console.log(userData.imageUrl);
-  // console.log(userData);
-  // console.log(nicknameValue);
-  // console.log(validText);
-  // console.log(imgChanged);
-  // console.log(!imgUrl && nicknameValue === '' && !validText);
 
   return (
     <>
