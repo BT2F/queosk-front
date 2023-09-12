@@ -6,77 +6,175 @@ import ProfileListItem from '../../account/ProfileListItem';
 import Modal from '../../account/Modal';
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import axios from '@/lib/axios';
+import { useRouter } from 'next/router';
+import { regx } from '@/lib/regx';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Account() {
+  const router = useRouter();
   const [profileModal, setProfileModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [ imgUrl, setImgUrl ] = useState('')
-  const [ nicknameValue, setNicknameValue ] = useState<string>('');
-  const [ validText, setValidText ] = useState<boolean | null>(null);
-  const [ userData, setUserData ] = useState(Object)
+  const [imgUrl, setImgUrl] = useState('https://placehold.co/100x100');
+  const [imgData, setImgData] = useState(Object);
+  const [imgChanged, setImgChanged] = useState(false);
+  const [nicknameValue, setNicknameValue] = useState<string>('');
+  const [validText, setValidText] = useState<boolean | null>(true);
+  const [userData, setUserData] = useState(Object);
+  const [validPassword, setValidPassword] = useState<boolean | null>(null);
+  const [existPassword, setExistPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-  // const axios = require('axios');
-  const serverUrl = 'http://localhost:3000'
-  
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const uploadedImage = e.target.files?.[0];
-    if(uploadedImage) {
+    if (uploadedImage) {
       const imageUrl = URL.createObjectURL(uploadedImage);
       setImgUrl(imageUrl);
+      setImgData(uploadedImage);
+      setImgChanged(true);
     }
-  }
+  };
 
-  const handleNicknameChange =(e:ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNicknameValue(value);
 
-    if(/^[a-z가-힣0-9]{3,16}/i.test(value)) {
-      setValidText(true)
+    if (regx.nickName.test(value)) {
+      setValidText(true);
     } else {
-      setValidText(false)
+      setValidText(false);
     }
-  }
+  };
 
+  const handleExistPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setExistPassword(value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewPassword(value);
+    if (regx.password.test(value)) {
+      setValidPassword(true);
+    } else {
+      setValidPassword(false);
+    }
+  };
+
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+  };
 
   const handleProfileUpload = async () => {
     try {
-      const updatedUserData =
-        imgUrl && nicknameValue
-          ? { ...userData, imageUrl: imgUrl, nickName: nicknameValue }
-          : { ...userData, imageUrl: imgUrl };
+      const updatedUserData = {
+        nickName: nicknameValue,
+        phone: userData.phone ? userData.phone : '',
+      };
+      console.log(updatedUserData);
+      // 서버로 이미지 된 유저 데이터를 전송
+      if (imgChanged) {
+        try {
+          const imgFormData = new FormData();
+          imgFormData.append('image', imgData);
 
-      // 서버로 업데이트 된 유저 데이터를 전송
-      await axios.put(`${serverUrl}/api/users/`, updatedUserData)
-      // 성공적으로 업데이트 되면 모달을 닫고 데이터를 업데이트
-      setUserData(updatedUserData);
-      setNicknameValue('')
-      setImgUrl(userData.imageUrl)
-      setProfileModal(false);
+          await axios.put(`/api/users/image`, imgFormData, {
+            headers: {
+              'content-Type': 'multipart/form-data',
+            },
+          });
+        } catch (error) {
+          console.error('이미지 업로드 에러', error);
+        }
+      }
+
+      await axios.put(`/api/users/`, updatedUserData).then((res) => {
+        if (res.status === 200) {
+          // 성공적으로 업데이트 되면 모달을 닫고 데이터를 업데이트
+          setUserData(res.data);
+          setProfileModal(false);
+          alert('프로필 수정이 완료되었습니다');
+        }
+      });
     } catch (error) {
-      console.error('프로필 업데이트 오류', error)
+      console.error('프로필 업데이트 오류', error);
     }
   };
-  
-  console.log(userData)
-  console.log(nicknameValue)
-  console.log(imgUrl)
-  
-  useEffect (() => {
-    const axiosUserData =  async () => {
+
+  const handleNewPassword = async() => {
+    const passwordData = {
+      existingPassword: existPassword,
+      newPassword: newPassword
+    }
+    console.log(existPassword)
+    console.log(newPassword)
+    try {
+      await axios.put('/api/users/password/change', passwordData).then((res) => {
+        if(res.status === 204) {
+          console.log('비밀번호 성공')
+        }
+      })
+    } catch(error) {
+      console.error(error);
+    }
+    
+  }
+
+  const handleSignOut = () => {
+    try {
+      axios.post('/api/users/signout').then((response) => {
+        if (response.status === 204) {
+          // 로그아웃 성공
+          console.log('로그아웃되었습니다.');
+        } else {
+          // 로그아웃 실패
+          console.error('로그아웃 실패', response.status);
+        }
+      });
+      router.push('/store')
+    } catch (error) {
+      console.error('로그아웃 에러', error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const sendPassword = {
+      password: "123123"
+    }
+    try {
+      await axios.delete('api/users/', {data: sendPassword}).then((response) => {
+        if (response.status === 204) {
+          // 회원탈퇴 성공
+          console.log('회원탈퇴 되었습니다');
+        }
+      });
+    } catch (error) {
+      console.error('회원탈퇴 에러', error);
+    }
+  };
+
+  useEffect(() => {
+    const getServerData = async () => {
       try {
-        const response = await axios.get(`${serverUrl}/api/users`);
+        const response = await axios.get(`/api/users`);
         const data = response.data;
         setUserData(data);
         setImgUrl(data.imageUrl);
+        setNicknameValue(data.nickName);
       } catch (error) {
         console.error('데이터 로드 오류', error);
       }
     };
-    
-    axiosUserData();
-    } ,[])
+    getServerData();
+  }, []);
 
-    console.log(validText)
+  // console.log(userData.imageUrl);
+  // console.log(userData);
+  // console.log(nicknameValue);
+  // console.log(validText);
+  // console.log(imgChanged);
+  // console.log(!imgUrl && nicknameValue === '' && !validText);
 
   return (
     <>
@@ -88,12 +186,13 @@ export default function Account() {
               <Modal.Form>
                 <Modal.ProfileInfoContainer>
                   <Modal.ProfileImg src={imgUrl} alt={'프로필 이미지'}>
-                    <Modal.ProfileInput onChange={handleImageUpload} />
+                    <Modal.ProfileInput onChange={handleImageChange} />
                   </Modal.ProfileImg>
                   <Modal.ProfileText
                     textHeader={'닉네임'}
                     placeholder={'닉네임을 입력해주세요.'}
-                    pattern={'/^[a-z가-힣0-9]{3,16}/i'}
+                    pattern={`${regx.nickName}`}
+                    isValue={nicknameValue}
                     value={nicknameValue}
                     onChange={handleNicknameChange}
                     validation={validText}
@@ -103,10 +202,13 @@ export default function Account() {
                   <Modal.Btn
                     className={'w-2/5'}
                     children={'수정'}
-                    disabled={true}
+                    disabled={
+                      !validText && (!imgChanged || nicknameValue !== '')
+                    }
                     onClick={(e) => {
                       e.preventDefault();
                       handleProfileUpload();
+                      setImgChanged(false);
                     }}
                   />
                   <Modal.Btn
@@ -115,8 +217,10 @@ export default function Account() {
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
-                      setNicknameValue('')
-                      setImgUrl(userData.imageUrl)
+                      setNicknameValue(userData.nickName);
+                      setImgUrl(userData.imageUrl);
+                      setValidText(true);
+                      setImgChanged(false);
                       setProfileModal(false);
                     }}
                   />
@@ -134,20 +238,56 @@ export default function Account() {
               <AccountHeader children={'비밀번호 변경'} />
               <Modal.Form>
                 <Modal.ProfileInfoContainer>
-                  <Modal.ProfileText placeholder="새로운 비밀번호를 입력해주세요." />
-                  <Modal.ProfileText placeholder="새로운 비밀번호를 다시 입력해주세요." />
-                  <p className="text-xs px-2 text-gray-700">
-                    {'비밀번호 조건'}을 조합하여 8~20자로 설정해주세요.
-                  </p>
+                  <Modal.ProfileText
+                    type="password"
+                    placeholder="기존 비밀번호를 입력해주세요."
+                    value={existPassword}
+                    onChange={handleExistPasswordChange}
+                  />
+                  <Modal.ProfilePassword
+                    type="password"
+                    placeholder="새로운 비밀번호를 입력해주세요."
+                    passwordCheck={
+                      '8자리 이상, 영문, 숫자 ,특수문자를 포함해야합니다.'
+                    }
+                    value={newPassword}
+                    validation={validPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <Modal.ProfilePassword
+                    type="password"
+                    placeholder="새로운 비밀번호를 다시 입력해주세요."
+                    passwordCheck={'비밀번호가 일치하지 않습니다'}
+                    value={confirmPassword}
+                    validation={newPassword === confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                  />
                 </Modal.ProfileInfoContainer>
                 <div className="button-container flex justify-around">
-                  <Modal.Btn children={'변경'} className={'w-2/5'} />
+                  <Modal.Btn
+                    children={'변경'}
+                    className={'w-2/5'}
+                    disabled={
+                      (!existPassword || !newPassword || !confirmPassword) &&
+                      !(newPassword === confirmPassword)
+                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNewPassword();
+                      setExistPassword('');
+                      setNewPassword('');
+                      setConfirmPassword('');
+                    }}
+                  />
                   <Modal.Btn
                     children={'취소'}
                     className={'w-2/5'}
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
+                      setExistPassword('');
+                      setNewPassword('');
+                      setConfirmPassword('');
                       setPasswordModal(false);
                     }}
                   />
@@ -167,16 +307,36 @@ export default function Account() {
           className="mb-1"
         />
         <hr className="my-5 h-0.5" />
-        <div className="profile-list">
-          <ProfileListHeader children={'내 정보'} />
-          <ProfileListItem
-            children={'프로필 수정'}
-            onClick={() => setProfileModal(true)}
-          />
-          <ProfileListItem
-            children={'비밀번호 수정'}
-            onClick={() => setPasswordModal(true)}
-          />
+        <div className="profile-list h-fit flex flex-col justify-between">
+          <div className="user-modify">
+            <ProfileListHeader children={'내 정보'} />
+            <ProfileListItem
+              children={'프로필 수정'}
+              onClick={() => setProfileModal(true)}
+            />
+            <ProfileListItem
+              children={'비밀번호 변경'}
+              onClick={() => setPasswordModal(true)}
+              btnDisabled={userData.loginType === 'KAKAO'}
+            />
+            <ProfileListItem
+              isSignOut={true}
+              children={'로그아웃'}
+              className={'text-gray-400 text-sm'}
+              onClick={handleSignOut}
+            />
+          </div>
+          {userData.loginType === 'KAKAO' ? null : (
+            <div className="user-delete absolute bottom-0 w-full">
+              <hr className="border-2" />
+              <ProfileListItem
+                isSignOut={true}
+                children={'회원탈퇴'}
+                className={'text-red-500/[.7] text-xs'}
+                onClick={handleDeleteAccount}
+              />
+            </div>
+          )}
         </div>
       </AccountLayOut>
     </>
