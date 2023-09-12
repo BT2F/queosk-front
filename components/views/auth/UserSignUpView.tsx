@@ -5,9 +5,9 @@ import SignLayout from '@/components/auth/layout/SignLayout';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
-import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
+import fixInputLabel, { IFixInputLabel } from '@/lib/fixInputLabel';
 
 export default function UserSignUpView() {
   const { signUp, OAuthRedirect } = useAuth();
@@ -62,6 +62,17 @@ export default function UserSignUpView() {
           v === getValues('password') || '비밀번호가 일치지 않습니다.',
       }),
     },
+    phone: {
+      type: 'text',
+      placeholder: '01012341234',
+      ...register('phone', {
+        required: '휴대폰번호는 필수입니다.',
+        pattern: {
+          value: regx.phone,
+          message: '-를 제외하고 입력해주세요!',
+        },
+      }),
+    },
   };
 
   const onClickKAKAOLogin = async () => {
@@ -87,7 +98,7 @@ export default function UserSignUpView() {
           {Object.keys(formRegister).map((key) => (
             <Input
               key={`user-sign-up-${key}`}
-              label={fixFirstCharUpperCase(key)}
+              label={fixInputLabel(key as IFixInputLabel)}
               errorText={(errors[key]?.message as string) || ''}
             >
               <Input.Field
