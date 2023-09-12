@@ -1,46 +1,47 @@
 import LayoutState from './LayoutState';
 
-interface MenuType {
-  menuName: string;
-  quantity: number;
-  tableNumber?: number;
-  cookTime?: string;
+interface TableInfo {
+  id: number;
+  status?: 'USING' | 'OPEN';
 }
 
-interface CookedMenuList {
-  menu: MenuType[];
-  tableNumber: number;
-  cookTime: string;
+interface MenuInfo {
+  id?: number;
+  restaurantId?: number;
+  name: string;
+  imageUrl?: string;
+  price?: number;
+  status?: 'SOLD_OUT' | 'ON_SALE';
 }
 
+interface CookedDataType {
+  id: number;
+  table: TableInfo;
+  menu: MenuInfo;
+  orderStatus: 'IN_PROGRESS' | 'DONE' | 'CANCELED';
+  count: number;
+}
 interface CookedListProps {
-  cookedMenuList: CookedMenuList[];
+  cookedMenuList: CookedDataType[];
 }
 
 export default function CookedList({ cookedMenuList }: CookedListProps) {
   return (
-    <LayoutState className="w-auto h-[560px]">
+    <LayoutState className="w-auto h-[585px]">
       <div className="text-center border-b border-black border-solid py-2 font-bold">
         조리 완료 목록
       </div>
       <div className="overflow-y-scroll" id="scrollCustom">
-        {cookedMenuList.map((order, index) => (
+        {cookedMenuList.map((item, index) => (
           <div
             key={index}
-            className="[&:not(:last-child)]:border-b border-black border-solid py-2 flex flex-col gap-1 "
+            className="flex flex-col justify-center gap-3 h-[100px] border-b-2 border-zinc-200"
           >
-            <div className="font-bold px-2"> {order.tableNumber}번 테이블</div>
-
-            {order.menu.map((menuItem, itemIndex) => (
-              <div
-                key={itemIndex}
-                className="flex justify-between px-3 py-1 border-t-2 border-zinc-200"
-              >
-                <span>{menuItem.menuName}</span>
-                <span>x {menuItem.quantity}</span>
-              </div>
-            ))}
-            <div className="px-2 py-1">조리 완료 {order.cookTime}</div>
+            <div className="font-bold px-2">테이블 {item.table.id}</div>
+            <div className="px-2 flex justify-between">
+              <span>{item.menu.name}</span>
+              <span>x {item.count}</span>
+            </div>
           </div>
         ))}
       </div>

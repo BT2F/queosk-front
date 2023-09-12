@@ -1,5 +1,5 @@
 interface LayoutStateProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className: string;
 }
 export default function LayoutState({ children, className }: LayoutStateProps) {
