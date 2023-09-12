@@ -22,7 +22,7 @@ export default function OwnerSignInView() {
     id: {
       type: 'text',
       placeholder: 'ownerId',
-      ...register('onwerId', {
+      ...register('ownerId', {
         required: '아이디는 필수입니다.',
         minLength: {
           value: 4,
