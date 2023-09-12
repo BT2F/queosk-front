@@ -2,12 +2,12 @@ import Layout from '@/components/auth/layout/SignLayout';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import useAuth from '@/hooks/useAuth';
-import { fixFirstCharUpperCase } from '@/lib/fixFirstCharUpperCase';
 import { regx } from '@/lib/regx';
 import { IFormRegister } from '@/types/auth.type';
 import Link from 'next/link';
 
 import { useForm } from 'react-hook-form';
+import fixInputLabel, { IFixInputLabel } from '@/lib/fixInputLabel';
 
 export default function OwnerSignInView() {
   const { signIn } = useAuth();
@@ -19,14 +19,14 @@ export default function OwnerSignInView() {
   } = useForm();
 
   const formRegister: IFormRegister = {
-    email: {
-      type: 'email',
-      placeholder: 'email@queosk.com',
-      ...register('email', {
-        required: '이메일은 필수입니다.',
-        pattern: {
-          value: regx.email,
-          message: '올바른 이메일 형식이 아닙니다.',
+    id: {
+      type: 'text',
+      placeholder: 'ownerId',
+      ...register('onwerId', {
+        required: '아이디는 필수입니다.',
+        minLength: {
+          value: 4,
+          message: 'Id는 4자리 이상이여야 합니다.',
         },
       }),
     },
@@ -56,7 +56,7 @@ export default function OwnerSignInView() {
           {Object.keys(formRegister).map((key) => (
             <Input
               key={`user-sign-in-${key}`}
-              label={fixFirstCharUpperCase(key)}
+              label={fixInputLabel(key as IFixInputLabel)}
               errorText={(errors[key]?.message as string) || ''}
             >
               <Input.Field
