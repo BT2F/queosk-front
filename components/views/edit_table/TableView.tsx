@@ -1,9 +1,6 @@
 import Table from '@/components/edit_table/Table';
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 import axios from '@/lib/axios';
-import { table } from 'console';
 
 interface TablesData {
   tableId: number;
@@ -16,28 +13,10 @@ export default function TableView() {
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
   const [newStatus, setNewStatus] = useState('');
 
-  // const requestData = {
-  //   ownerId: 'darm',
-  //   password: '1234',
-  // };
-
-  // axios
-  //   .post('/api/restaurants/signin', requestData)
-  //   .then((response) => {
-  //     console.log('응답 데이터:', response.data);
-  //   })
-  //   .catch((error) => {
-  //     console.error('에러:', error);
-  //   });
-
   //매장 테이블 현황
   const getTables = async () => {
     try {
-      const response = await axios.get('/api/restaurant/tables', {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJhc2RAZGFybS5rciIsInVzZXJSb2xlIjoiUk9MRV9SRVNUQVVSQU5UIiwiaXNzIjoicXVlb3NrIiwiaWF0IjoxNjk0NDUyNTU1LCJleHAiOjE2OTQ1Mzg5NTV9.pbGzwlMzAgFV_UlyrIOywkc-DkK47jbJZ2474OuNO9c`,
-        },
-      });
+      const response = await axios.get('/api/restaurant/tables');
       const data = response.data;
       console.log(data);
       setTables(data);
@@ -46,35 +25,19 @@ export default function TableView() {
     }
   };
   useEffect(() => {
-    getTables();
-  }, []);
+    const intervalId = setInterval(() => {
+      getTables();
+    }, 10000);
 
-  //테이블 조회
-  // const getTablesIdCheck = async () => {
-  //   try {
-  //     const tableId = 6;
-  //     const response = await axios.get(`/api/restaurant/table/${tableId}`, {
-  //       headers: {
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJhc2RAZGFybS5rciIsInVzZXJSb2xlIjoiUk9MRV9SRVNUQVVSQU5UIiwiaXNzIjoicXVlb3NrIiwiaWF0IjoxNjk0NDUyMjUwLCJleHAiOjE2OTQ1Mzg2NTB9.9JJnek5arRAMI_sRC_PA7fJc0-BNN4Vrlf1oi22BToQ`,
-  //       },
-  //     });
-  //     const data = response.data;
-  //     console.log(data);
-  //     setTableIdStatus(data);
-  //   } catch (error) {
-  //     console.error('테이블 조회', error);
-  //   }
-  // };
-  // getTablesIdCheck();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   //테이블 추가
   const AddTable = async () => {
     try {
-      const response = await axios.post('/api/restaurant/table', {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJhc2RAZGFybS5rciIsInVzZXJSb2xlIjoiUk9MRV9SRVNUQVVSQU5UIiwiaXNzIjoicXVlb3NrIiwiaWF0IjoxNjk0NDUyMzY1LCJleHAiOjE2OTQ1Mzg3NjV9.QflB4lraeeTC92TlNZEmm-6YykGljLw8F-akijYEpD0`,
-        },
-      });
+      const response = await axios.post('/api/restaurant/table');
       console.log(response?.data);
       getTables();
     } catch (error) {
@@ -85,11 +48,7 @@ export default function TableView() {
   //테이블 삭제
   const deleteTable = async (tableId: number) => {
     try {
-      const response = await axios.delete(`/api/restaurant/table/${tableId}`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJhc2RAZGFybS5rciIsInVzZXJSb2xlIjoiUk9MRV9SRVNUQVVSQU5UIiwiaXNzIjoicXVlb3NrIiwiaWF0IjoxNjk0NDQ3NzYxLCJleHAiOjE2OTQ1MzQxNjF9.TbWoQQwCLnqIdHVvocpQdzt571xE7V8IhR36WS3Evz0`,
-        },
-      });
+      const response = await axios.delete(`/api/restaurant/table/${tableId}`);
       getTables();
       setSelectedTableId(null);
     } catch (error) {
@@ -101,12 +60,7 @@ export default function TableView() {
   const newStatusTable = async (tableId: number, tableStatus: string) => {
     try {
       const response = await axios.put(
-        `/api/restaurant/table/${tableId}?tableStatus=${tableStatus}`,
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiZW1haWwiOiJhc2RAZGFybS5rciIsInVzZXJSb2xlIjoiUk9MRV9SRVNUQVVSQU5UIiwiaXNzIjoicXVlb3NrIiwiaWF0IjoxNjk0NDQ3NzYxLCJleHAiOjE2OTQ1MzQxNjF9.TbWoQQwCLnqIdHVvocpQdzt571xE7V8IhR36WS3Evz0`,
-          },
-        }
+        `/api/restaurant/table/${tableId}?tableStatus=${tableStatus}`
       );
       getTables();
     } catch (error) {

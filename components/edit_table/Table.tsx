@@ -18,8 +18,8 @@ export default function Table({
   };
 
   return (
-    <div className="card w-[180px] h-[200px] bg-base-100 shadow-xl border-2 border-[#FBBD23] rounded-3xl mt-7">
-      <div className="pl-5 pr-3 py-2 flex flex-col gap-4">
+    <div className="card items-center w-[180px] h-[200px] bg-base-100 shadow-xl border-2 border-[#FBBD23] rounded-3xl mt-7">
+      <div className="w-full px-4 py-2 flex flex-col gap-4">
         <div className="flex justify-between">
           <h2 className="card-title">{tableId}번</h2>
           {mode ? (
@@ -32,9 +32,9 @@ export default function Table({
                 stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -49,9 +49,9 @@ export default function Table({
                 stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
@@ -59,20 +59,20 @@ export default function Table({
           )}
         </div>
         {status === 'OPEN' ? (
-          <div className="font-bold text-sky-600">빈자리</div>
+          <div className="font-bold text-2xl mx-auto">빈자리</div>
         ) : (
-          <div className="font-bold text-rose-500">사용중..</div>
+          <div className="font-bold text-2xl mx-auto">사용중</div>
         )}
         {status === 'OPEN' ? (
           <button
-            className="btn btn-outline btn-error"
+            className="btn bg-rose-300 w-[100px] mx-auto"
             onClick={() => onStatusChange('USING')}
           >
             사용하기
           </button>
         ) : (
           <button
-            className="btn btn-outline btn-info"
+            className="btn bg-sky-300 w-[100px] mx-auto"
             onClick={() => onStatusChange('OPEN')}
           >
             비어놓기
