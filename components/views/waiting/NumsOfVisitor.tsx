@@ -1,22 +1,13 @@
 import WaitingRegistration from './WaitingResistration';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import WaitingLayOut from '../../waiting/WaitingLayOut';
 import WaitingTopHeader from '../../waiting/WaitingTopHeader';
 import WaitingButton from '../../waiting/WaitingButton';
-import { NextPageContext } from 'next';
 
 interface numOfCountProps {
   numOfCount?: number;
 }
-interface storeIdProps {
-  storeId: string;
-}
-
-// export const getServerSideProps = async (context:NextPageContext) => {
-//   const {storeId} = context.query;
-//   return {props: { storeId }}
-// }
 
 export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
   const [count, setCount] = useState(numOfCount ? numOfCount : 1);
@@ -24,24 +15,10 @@ export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
   const router = useRouter();
   const { storeId } = router.query;
 
-  // useEffect(() => {
-  //   const getServerData = async () => {
-  //     try {
-  //       const response = await axios.get(`/api/restaurants/1/details`);
-  //       const data = response.data;
-  //       setStoreData(data.restaurantDto);
-  //     } catch (error) {
-  //       console.error('데이터 로드 오류', error);
-  //     }
-  //   };
-  //   getServerData();
-  // }, []);
-
-
   return (
     <>
       {showNextComponent ? (
-        <WaitingRegistration count={count}/>
+        <WaitingRegistration count={count} />
       ) : (
         <WaitingLayOut>
           <WaitingTopHeader
@@ -86,8 +63,8 @@ export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
               </div>
             </div>
           </div>
-          <div className="waiting-footer fixed bottom-0 max-w-[80%] md:max-w-[640px] w-full">
-            <div className="font-bold flex justify-between mx-4 p-4 border-t">
+          <div className="waiting-footer fixed bottom-0 left-0 right-0 max-w-[640px] mx-auto">
+            <div className="font-bold flex justify-between mx-4 p-4 border-t ">
               <span>방문 인원</span>
               <span>총 {count} 명</span>
             </div>

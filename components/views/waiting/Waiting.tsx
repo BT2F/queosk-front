@@ -2,7 +2,7 @@ import axios from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type ICurrentDate = {
   date?: object;
@@ -32,33 +32,32 @@ export default function Waiting() {
   const router = useRouter();
   const [storeData, setStoreData] = useState(Object);
   const { storeId } = router.query;
-  const QUEUE_QUERY_KEY = ['queueData']
-
+  const QUEUE_QUERY_KEY = 'queueData';
 
   const handleQueueCancel = async () => {
     try {
       await axios.delete(`/api/restaurants/${storeId}/user/queue`);
       console.log(`웨이팅 취소 성공`);
-      alert('웨이팅이 취소되었습니다.')
-      router.push(`/store/`)
+      alert('웨이팅이 취소되었습니다.');
+      router.push(`/store/`);
     } catch (error) {
       console.error(error);
     }
   };
 
   const getQueueData = async () => {
-    const response = await axios.get(`/api/restaurants/${1}/user/queue/`);
+    const response = await axios.get(`/api/restaurants/${storeId}/user/queue/`);
     return response.data;
   };
 
   const { data: queueData, error } = useQuery({
-    queryKey: QUEUE_QUERY_KEY,
+    queryKey: [QUEUE_QUERY_KEY, storeId],
     queryFn: getQueueData,
     refetchInterval: 10000,
   });
-  
-  if(error) {
-    console.error('큐 로드 오류', error)
+
+  if (error) {
+    console.error('큐 로드 오류', error);
   }
 
   useEffect(() => {
@@ -71,13 +70,13 @@ export default function Waiting() {
         console.error('데이터 로드 오류', error);
       }
     };
-  
+
     getServerData();
   }, []);
 
   return (
     <>
-      <div className="waiting-container md:max-w-[100%] max-w-[80%] mx-auto">
+      <div className="waiting-container mx-auto">
         <div className="navbar bg-base-100 mb-12">
           <Link href="/" className="text-xl normal-case ">
             Quosk
@@ -96,22 +95,11 @@ export default function Waiting() {
           <div className="waiting-number py-24 relative after:content-[''] after:w-[80%] after:h-[2px] after:absolute after:bottom-0 after:left-2/4 after:translate-x-[-50%] after:borderafter:border-gray-300">
             <h2 className="text-2xl text-center">현재 대기 순위</h2>
             <h2 className="text-8xl font-bold text-center">
-              {queueData ? (queueData.userQueueIndex) : ('...')}
+              {queueData ? queueData.userQueueIndex : '...'}
             </h2>
           </div>
-          {/* <div className="waiting-number-people pt-8 pb-24">
-            <h2 className="text-2xl text-center mb-9">인원</h2>
-            <h2 className="text-8xl font-bold text-center">{'4명'}</h2>
-          </div> */}
         </div>
         <div className="waiting-btn flex flex-col">
-          {/* <button
-            className="btn mb-6"
-            type="button"
-            onClick={() => router.reload()}
-          >
-            실시간 웨이팅 확인
-          </button> */}
           <button className="btn" type="button" onClick={handleQueueCancel}>
             웨이팅 취소 하기
           </button>
