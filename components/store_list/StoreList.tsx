@@ -4,7 +4,7 @@ import axios from '@/lib/axios';
 import { IGeolocation } from '@/hooks/useLocation';
 import useSearchParams from '@/hooks/useSearchParams';
 import { Fragment } from 'react';
-import { IStoreRes } from '@/types/storeList.type';
+import { IStoreRes } from '@/types/store.type';
 import StoreCard, { LoadingStoreCard } from '@/components/store_list/StoreCard';
 import InfiniteScroll from 'react-infinite-scroller';
 
