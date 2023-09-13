@@ -28,10 +28,12 @@ const getCurrentDate: ICurrentDate = {
 const formattedDate = `${getCurrentDate.year}.${getCurrentDate.month}.${getCurrentDate.day}`;
 const formattedTime = `${getCurrentDate.hours}:${getCurrentDate.minutes}`;
 
-export default function NowWaiting() {
+export default function Waiting() {
   const router = useRouter();
   const [storeData, setStoreData] = useState(Object);
   const { storeId } = router.query;
+  const QUEUE_QUERY_KEY = ['queueData']
+
 
   const handleQueueCancel = async () => {
     try {
@@ -49,20 +51,11 @@ export default function NowWaiting() {
     return response.data;
   };
 
-  // const {
-  //   data: queueData,
-  //   error,
-  //   refetch,
-  // } = useQuery(['queueData'], () => getQueueData(), {
-  //   refetchInterval: 10000,
-  // });
-
-  
   const { data: queueData, error } = useQuery({
-    queryKey: ['queueData'],
+    queryKey: QUEUE_QUERY_KEY,
     queryFn: getQueueData,
     refetchInterval: 10000,
-  })
+  });
   
   if(error) {
     console.error('큐 로드 오류', error)
@@ -78,23 +71,9 @@ export default function NowWaiting() {
         console.error('데이터 로드 오류', error);
       }
     };
-    // const getQueueData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `/api/restaurants/${storeId}/user/queue/`
-    //     );
-    //     const resData = response.data;
-    //     setQueueData(resData);
-    //   } catch (error) {
-    //     console.error('큐 로드 오류', error);
-    //   }
-    // }
+  
     getServerData();
-    // getQueueData();
   }, []);
-
-  console.log(queueData);
-  console.log(storeData);
 
   return (
     <>

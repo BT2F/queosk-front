@@ -1,13 +1,15 @@
-import Waiting from '@/components/views/waiting/Waiting';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-export default function Page() {
-  const queryClient = new QueryClient();
+import dynamic from 'next/dynamic';
 
+const Waiting = dynamic(() => import('@/components/views/waiting/Waiting'),
+  {
+    ssr: false,
+  }
+);
+export default function Page() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Waiting />
-      </QueryClientProvider>
+      <Waiting />
     </>
   );
 }
+

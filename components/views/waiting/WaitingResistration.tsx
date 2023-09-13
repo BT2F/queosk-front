@@ -26,8 +26,6 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
 
     try {
       await axios.post(`/api/restaurants/${storeId}/queue`, numberOfPeople);
-      console.log(numberOfPeople)
-      console.log('등록 성공')
       alert('웨이팅 등록에 성공했습니다.')
       router.push(`/store/${storeId}/waiting`)
     } catch(error) {

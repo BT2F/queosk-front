@@ -8,12 +8,13 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import axios from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { regx } from '@/lib/regx';
+import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 
 export default function Account() {
   const router = useRouter();
   const [profileModal, setProfileModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [imgUrl, setImgUrl] = useState('https://placehold.co/100x100');
+  const [imgUrl, setImgUrl] = useState(placeholderImgUrl("100x100"));
   const [imgData, setImgData] = useState(Object);
   const [imgChanged, setImgChanged] = useState(false);
   const [nicknameValue, setNicknameValue] = useState<string>('');
