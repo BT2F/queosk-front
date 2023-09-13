@@ -9,6 +9,7 @@ import axios from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { regx } from '@/lib/regx';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
+import useAuth from '@/hooks/useAuth';
 
 export default function Account() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Account() {
   const [existPassword, setExistPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const { signOut } = useAuth();
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const uploadedImage = e.target.files?.[0];
@@ -123,21 +125,8 @@ export default function Account() {
     }
   };
 
-  const handleSignOut = () => {
-    try {
-      axios.post('/api/users/signout').then((response) => {
-        if (response.status === 204) {
-          // 로그아웃 성공
-          console.log('로그아웃되었습니다.');
-        } else {
-          // 로그아웃 실패
-          console.error('로그아웃 실패', response.status);
-        }
-      });
-      router.push('/store');
-    } catch (error) {
-      console.error('로그아웃 에러', error);
-    }
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   const handleDeleteAccount = async () => {
