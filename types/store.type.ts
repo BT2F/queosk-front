@@ -19,3 +19,14 @@ const storeListRes = {
 };
 
 export type IStoreRes = typeof storeListRes;
+
+const menuListRes = {
+  id: 2,
+  restaurantId: 6,
+  name: '만둣국',
+  imageUrl: 'string',
+  price: 8000,
+  status: 'ON_SALE',
+};
+
+export type IMenuRes = typeof menuListRes;

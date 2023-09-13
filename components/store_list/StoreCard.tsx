@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { IStoreRes } from '@/types/storeList.type';
+import { IStoreRes } from '@/types/store.type';
 import Link from 'next/link';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 

@@ -3,6 +3,7 @@ export const STORE_LIST_KEY = {
   STORE_LIST: 'store_list',
   STORE: 'store',
   MENU_LIST: 'menu_list',
+  CART: 'cart',
 };
 
 export const STORE_CATEGORY_KEY = {
