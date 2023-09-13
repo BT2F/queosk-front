@@ -21,12 +21,12 @@ export default function CartMenuCard(props: Props) {
         </div>
       </div>
       <div className="flex">
-        <figure className="w-[100px] h-[100px] rounded-xl overflow-hidden">
+        <figure className="relative w-[100px] h-[100px] rounded-xl overflow-hidden">
           <Image
             src={props.imageUrl || placeholderImgUrl('100x100')}
             alt={`${props.name} 이미지`}
-            width={100}
-            height={100}
+            objectFit={'cover'}
+            fill={true}
           />
         </figure>
         <div className="flex flex-col flex-1 p-4">

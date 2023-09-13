@@ -47,13 +47,13 @@ export default function StoreList({ location }: Props) {
     data?.pages.at(-1).pageable.pageNumber + 1 < data?.pages.at(-1).totalPages;
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 mb-16">
       <InfiniteScroll
         pageStart={0}
         loadMore={() => fetchNextPage()}
         hasMore={isNextPage()}
         loader={
-          <div className="flex justify-center">
+          <div className="flex justify-center" key={0}>
             <span className="loading loading-dots loading-lg" />
           </div>
         }
@@ -80,7 +80,7 @@ export default function StoreList({ location }: Props) {
 export const LoadingStoreList = () => (
   <div className="mt-5">
     {Array.from({ length: 5 }).map((_, i) => (
-      <LoadingStoreCard key={i} />
+      <LoadingStoreCard key={`fragment-loading-${i}`} />
     ))}
   </div>
 );

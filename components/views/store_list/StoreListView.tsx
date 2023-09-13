@@ -4,12 +4,13 @@ import StoreList, { LoadingStoreList } from '@/components/store_list/StoreList';
 import { Suspense } from 'react';
 import StoreHeader from '@/components/store_list/StoreHeader';
 import StoreLocationError from '@/components/store_list/StoreLocationError';
+import Nav from '@/components/common/Nav';
 
 export default function StoreListView() {
   const { location } = useLocation();
 
   return (
-    <div className="flex flex-col p-5 border h-screen">
+    <div className="relative flex flex-col p-5 min-h-screen">
       <StoreHeader location={location} />
       <StoreListNav />
       {location.onLoad ? (
@@ -23,6 +24,8 @@ export default function StoreListView() {
       ) : (
         <LoadingStoreList />
       )}
+
+      <Nav />
     </div>
   );
 }
