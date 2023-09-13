@@ -53,7 +53,7 @@ export default function StoreList({ location }: Props) {
         loadMore={() => fetchNextPage()}
         hasMore={isNextPage()}
         loader={
-          <div className="flex justify-center">
+          <div className="flex justify-center" key={0}>
             <span className="loading loading-dots loading-lg" />
           </div>
         }
@@ -62,7 +62,7 @@ export default function StoreList({ location }: Props) {
           data.pages.map((pageGroup, i) => (
             <Fragment key={`page_group_${i}`}>
               {pageGroup.content.length ? (
-                pageGroup.content.map((v: IStoreRes) => (
+                pageGroup.content.map((v: IStoreRes, j: number) => (
                   <StoreCard {...v} key={`store-list-key-${v.id}`} />
                 ))
               ) : (
@@ -80,7 +80,7 @@ export default function StoreList({ location }: Props) {
 export const LoadingStoreList = () => (
   <div className="mt-5">
     {Array.from({ length: 5 }).map((_, i) => (
-      <LoadingStoreCard key={i} />
+      <LoadingStoreCard key={`fragment-loading-${i}`} />
     ))}
   </div>
 );

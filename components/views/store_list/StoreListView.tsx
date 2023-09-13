@@ -9,7 +9,7 @@ export default function StoreListView() {
   const { location } = useLocation();
 
   return (
-    <div className="flex flex-col p-5 border h-screen">
+    <div className="flex flex-col p-5 h-screen">
       <StoreHeader location={location} />
       <StoreListNav />
       {location.onLoad ? (
