@@ -2,14 +2,6 @@ import AddForm from '@/components/edit_menu/AddForm';
 import { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
 
-interface FormData {
-  imageFile: File;
-  name: string;
-  price: number;
-  imageUrl?: string;
-  id?: number;
-  status?: string;
-}
 interface NewDataType {
   id?: number;
   name?: string;
@@ -18,14 +10,14 @@ interface NewDataType {
   imageFile?: File;
 }
 interface EditDataType {
-  menuId: string;
-  name?: string;
-  price?: number;
-  imageUrl?: string;
-  imageFile?: File;
-  status?: string;
+  id?: number;
+  imageUrl?: string | null;
+  name: string;
+  price: number;
+  restaurantId?: number;
+  status?: 'ON_SALE' | 'SOLD_OUT';
 }
-///
+
 interface MenuItem {
   id: number;
   name: string;
@@ -43,6 +35,13 @@ interface addMenuType {
   name: string;
   price: number;
 }
+interface updateMenuType {
+  name?: string;
+  price?: number;
+  imageUrl?: string;
+  imageFile?: File;
+  status?: string;
+}
 
 export default function EditMenuView() {
   const [checkedMenu, setCheckedMenu] = useState<string[]>([]);
@@ -54,7 +53,7 @@ export default function EditMenuView() {
 
   //메뉴 편집
   const [isEditClicked, setIsEditClicked] = useState(false);
-  const [editingMenu, setEditingMenu] = useState<any | null>(null);
+  const [editingMenu, setEditingMenu] = useState<EditDataType | null>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
 
   //(1)식당 메뉴 목록 조회
@@ -62,7 +61,6 @@ export default function EditMenuView() {
     try {
       const response = await axios.get('/api/restaurants/6/menus');
       const data = response.data;
-      console.log(data);
       setMenuData(data);
     } catch (error) {
       console.error('식당 메뉴 목록 조회', error);
@@ -77,7 +75,6 @@ export default function EditMenuView() {
     try {
       const response = await axios.post('/api/restaurants/menus', newMenuData);
       const data = response.data;
-      console.log(data);
       getMenuListData();
     } catch (error) {
       console.error('식당 메뉴 목록 추가', error);
@@ -114,7 +111,7 @@ export default function EditMenuView() {
   }, [checkedMenu]);
 
   //(5)식당 메뉴 정보(이름, 가격) 수정
-  const editMenuInfo = async (editMenuInfo: any) => {
+  const editMenuInfo = async (editMenuInfo: updateMenuType) => {
     try {
       await axios.put(`/api/restaurants/menus/${menuId}`, editMenuInfo);
       getMenuListData();
@@ -123,7 +120,7 @@ export default function EditMenuView() {
     }
   };
   //(6)메뉴 주문가능여부 상태 수정
-  const editMenuStatus = async (status: any) => {
+  const editMenuStatus = async (status: updateMenuType) => {
     try {
       await axios.put(`/api/restaurants/menus/${menuId}/status`, status);
       getMenuListData();
@@ -134,8 +131,6 @@ export default function EditMenuView() {
 
   //(7)메뉴 이미지 수정
   const editMenuImage = async (file: any) => {
-    console.log(file);
-
     const imgFormData = new FormData();
     imgFormData.append('imageFile', file.imageFile);
     console.log('이미지 ', imgFormData.get('imageFile'));
@@ -149,7 +144,7 @@ export default function EditMenuView() {
     }
   };
 
-  const handleUpdateMenu = (editData: any) => {
+  const handleUpdateMenu = (editData: updateMenuType) => {
     if (checkedMenu.length > 0) {
       setMenuId(menuId);
       const { name, price, status, imageFile } = editData;
@@ -195,6 +190,7 @@ export default function EditMenuView() {
       if (firstMenu) {
         setIsEditClicked(true);
         setEditingMenu(firstMenu);
+        console.log(editingMenu);
       }
     }
   };

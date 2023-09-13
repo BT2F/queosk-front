@@ -10,10 +10,19 @@ interface FormData {
   status?: 'ON_SALE' | 'SOLD_OUT';
 }
 
+interface EditDataType {
+  id?: number;
+  imageUrl?: string | null;
+  name: string;
+  price: number;
+  restaurantId?: number;
+  status?: 'ON_SALE' | 'SOLD_OUT';
+}
+
 interface AddFormProps {
   menuData: (data: FormData, menuIndex?: number | null) => void;
   isEditMode: boolean;
-  editingMenuData: FormData | null;
+  editingMenuData: EditDataType | null;
   setImageUrl: (p: string) => void;
 }
 export default function AddForm({
@@ -23,7 +32,7 @@ export default function AddForm({
   setImageUrl,
 }: AddFormProps) {
   const [imageUrlSave, setImageUrlSave] = useState('');
-  const [imageFileSave, setImageFileSave] = useState<File | any>();
+  const [imageFileSave, setImageFileSave] = useState<File>();
   const [inputName, setInputName] = useState('');
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
@@ -31,7 +40,7 @@ export default function AddForm({
 
   useEffect(() => {
     if (isEditMode && editingMenuData) {
-      setInputName(editingMenuData.name);
+      setInputName(editingMenuData?.name);
       setInputPrice(editingMenuData.price.toString());
       setImageUrlSave(editingMenuData.imageUrl || '');
     } else {
@@ -67,25 +76,12 @@ export default function AddForm({
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(imageUrlSave);
-    console.log(imageFileSave);
-
-    // const imgFormData = new FormData();
-    // if (imageFileSave) {
-    //   imgFormData.append('image', imageFileSave);
-    // }
-
-    // if (imageUrlSave) {
-    //   imgFormData.append('imageUrl', imageUrlSave);
-    // }
-
     const newData = {
       imageUrl: imageUrlSave,
       imageFile: imageFileSave,
       ...data,
       price: parseFloat(inputPrice),
     };
-    console.log(newData);
     menuData(newData);
     handleClick();
   };
@@ -110,13 +106,12 @@ export default function AddForm({
       const uploadedImage = e.target.files[0];
       setImageFileSave(uploadedImage);
       if (uploadedImage) {
-        console.log(uploadedImage);
         const imageUrl = URL.createObjectURL(uploadedImage);
         setImageUrlSave(imageUrl);
 
         const imgFormData = new FormData();
         imgFormData.append('imageFile', uploadedImage, uploadedImage.name);
-        console.log(imgFormData);
+
         try {
           const response = await axios.post(
             '/api/restaurants/menus/image',
@@ -126,7 +121,6 @@ export default function AddForm({
             }
           );
           setImageUrl(response.data.imageUrl);
-          console.log(response.data);
         } catch (error) {
           console.error('메뉴 이미지 업로드 후 가져오기', error);
         }
