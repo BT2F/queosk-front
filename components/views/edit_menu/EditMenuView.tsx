@@ -133,12 +133,12 @@ export default function EditMenuView() {
   };
 
   //(7)메뉴 이미지 수정
-  const editMenuImage = async (imageFile: any) => {
-    console.log(imageFile);
+  const editMenuImage = async (file: any) => {
+    console.log(file);
 
     const imgFormData = new FormData();
-    imgFormData.append('imageFile', imageFile);
-    console.log(imgFormData);
+    imgFormData.append('imageFile', file.imageFile);
+    console.log('이미지 ', imgFormData.get('imageFile'));
 
     try {
       await axios.post(`/api/restaurants/menus/${menuId}/image`, imgFormData, {
