@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { IStoreRes } from '@/types/storeList.type';
+import { IStoreRes } from '@/types/store.type';
 import { STORE_LIST_KEY } from '@/constants/store_list';
 import axios from '@/lib/axios';
 
