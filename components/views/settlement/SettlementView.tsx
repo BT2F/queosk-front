@@ -4,15 +4,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from '@/lib/axios';
 import { format } from 'date-fns';
 
-import { useQuery } from '@tanstack/react-query';
-
 interface MenuType {
   menu: string;
   count: number;
   price: number;
 }
 interface DataType {
-  orderdMenu: MenuType[];
+  orderedMenus: MenuType[];
   price: number;
 }
 
@@ -28,52 +26,64 @@ export default function SettlementView() {
     setEndDate(end);
   };
 
-  const { refetch: refetchTodayData } = useQuery<any, any>({
-    queryKey: ['today'],
-    queryFn: async () => {
+  //금일 정산 조회
+  const getTodaySettle = async () => {
+    try {
       const response = await axios.get('/api/restaurants/settlement/today');
-      return response.data;
-    },
-  });
+      const data = response.data;
+      console.log(data);
+      setTodayData(data);
+      setPeriodData(null);
+    } catch (error) {
+      console.error('금일 정산 조회', error);
+    }
+  };
+  useEffect(() => {
+    getTodaySettle();
+  }, []);
 
-  const { refetch: refetchPeriodData } = useQuery<any, any>({
-    queryKey: ['period'],
-    queryFn: async () => {
+  //기간별 정산 조회
+  const getPeriodSettle = async () => {
+    try {
       const startDateString = format(startDate, 'yyyy-MM-dd');
       const endDateString = format(endDate, 'yyyy-MM-dd');
+      console.log(startDateString);
+      console.log(endDateString);
       const response = await axios.get(
         `/api/restaurants/settlement/period?to=${endDateString}&from=${startDateString}`
       );
-      console.log(response.data);
-      console.log(startDateString);
-      console.log(endDateString);
-      return response.data;
-    },
-  });
+      const data = response.data;
+
+      console.log(data);
+      setPeriodData(data);
+      setTodayData(null);
+    } catch (error) {
+      console.error('기간별 정산 조회', error);
+    }
+  };
+  useEffect(() => {
+    getPeriodSettle();
+  }, []);
 
   useEffect(() => {
     if (startDate && endDate) {
       const isToday = new Date();
       if (startDate.toDateString() === endDate.toDateString()) {
         if (startDate.toDateString() === isToday.toDateString()) {
-          refetchTodayData().then((data) => {
-            setTodayData(data?.data);
-            setPeriodData(null);
-          });
+          getTodaySettle();
+          setPeriodData(null);
         } else {
-          refetchPeriodData().then((data) => {
-            setPeriodData(data?.data);
-            setTodayData(null);
-          });
+          getPeriodSettle();
+
+          setTodayData(null);
         }
       } else {
-        refetchPeriodData().then((data) => {
-          setPeriodData(data?.data);
-          setTodayData(null);
-        });
+        getPeriodSettle();
+
+        setTodayData(null);
       }
     }
-  }, [startDate, endDate, refetchTodayData, refetchPeriodData]);
+  }, [startDate, endDate]);
 
   return (
     <div className="w-4/5 mx-auto">
@@ -96,7 +106,7 @@ export default function SettlementView() {
            .react-datepicker__day--selected, .react-datepicker__day--in-range{
             background-color: #FBBD23;
           }
-          .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover, 
+          .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover,
           .react-datepicker__day--in-range:hover, .react-datepicker__month-text--selected:hover,
           .react-datepicker__month-text--in-selecting-range:hover, .react-datepicker__month-text--in-range:hover,
           .react-datepicker__quarter-text--selected:hover, .react-datepicker__quarter-text--in-selecting-range:hover,
@@ -126,9 +136,8 @@ export default function SettlementView() {
       </div>
 
       <div className="font-bold text-xl pt-8 mb-8">
-        목록 (총
-        {(todayData ? todayData.orderdMenu.length : 0) +
-          (periodData ? periodData.orderdMenu.length : 0)}
+        목록 ({todayData && todayData.orderedMenus.length}
+        {periodData && periodData.orderedMenus.length}
         개)
       </div>
       <div>
@@ -140,34 +149,29 @@ export default function SettlementView() {
         </div>
       </div>
 
-      {periodData?.orderdMenu || todayData?.orderdMenu ? (
-        <div>
+      {periodData?.orderedMenus || todayData?.orderedMenus ? (
+        <div className="flex flex-col w-full h-[40px] flex items-center text-center">
           {periodData &&
-            periodData.orderdMenu &&
-            periodData.orderdMenu.map((data: any, index: any) => (
-              <div key={index}>
-                <div>
-                  {data.map((menuItem: any, subIndex: any) => (
-                    <div
-                      key={subIndex}
-                      className="flex h-[40px] flex items-center text-center"
-                    >
-                      <div className="w-1/6">{subIndex + 1}</div>
-                      <div className="w-3/6">{menuItem.menu}</div>
-                      <div className="w-2/6">{menuItem.price} 원</div>
-                      <div className="w-2/6">x {menuItem.count}</div>
-                    </div>
-                  ))}
-                </div>
+            periodData.orderedMenus &&
+            periodData.orderedMenus.map((data, index) => (
+              <div
+                key={index + 1}
+                className="flex w-full h-[40px] flex items-center text-center py-3"
+              >
+                <div className="w-1/6">{index + 1}</div>
+                <div className="w-3/6">{data.menu}</div>
+                <div className="w-2/6">{data.price} 원</div>
+                <div className="w-2/6">x {data.count}</div>
+                <div></div>
               </div>
             ))}
 
           {todayData &&
-            todayData.orderdMenu &&
-            todayData.orderdMenu.map((data, index) => (
+            todayData.orderedMenus &&
+            todayData.orderedMenus.map((data, index) => (
               <div
                 key={index + 1}
-                className="flex h-[40px] flex items-center text-center"
+                className="lex w-full h-[40px] flex items-center text-center py-3"
               >
                 <div className="w-1/6">{index + 1}</div>
                 <div className="w-3/6">{data.menu}</div>
