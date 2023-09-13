@@ -1,8 +1,14 @@
+import Link from 'next/link';
+
 export default function Header() {
   return (
     <div className="flex justify-end items-center bg-yellow-400 w-full h-[80px]">
-      <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn m-1 mx-5 ">
+      <div className="dropdown dropdown-end dropdown-hover">
+        <label
+          tabIndex={0}
+          className="btn m-1 mx-5 bg-transparent border-none"
+          id="label"
+        >
           <svg
             className="swap-off fill-current"
             xmlns="http://www.w3.org/2000/svg"
@@ -15,38 +21,37 @@ export default function Header() {
         </label>
         <ul
           tabIndex={0}
-          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[150px]"
+          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[150px] flex gap-3 items-center"
         >
           <li>
-            <a href="/mystore/menu/edit">
-              <div className="btn btn-outline btn-warning w-[110px]">
-                메뉴 등록
-              </div>
-            </a>
+            <button className="btn btn-outline btn-warning w-[120px]">
+              <Link href="/mystore/menu/edit">메뉴 등록</Link>
+            </button>
           </li>
           <li>
-            <a href="/mystore/state">
-              <div className="btn btn-outline btn-warning w-[110px]">
-                실시간 주문
-              </div>
-            </a>
+            <button className="btn btn-outline btn-warning w-[120px]">
+              <Link href="/mystore/state">실시간 주문</Link>
+            </button>
           </li>
           <li>
-            <a href="/mystore/tables">
-              <div className="btn  btn-outline btn-warning w-[110px]">
-                테이블 현황
-              </div>
-            </a>
+            <button className="btn btn-outline btn-warning w-[120px]">
+              <Link href="/mystore/tables">테이블 현황</Link>
+            </button>
           </li>
           <li>
-            <a href="/mystore/settlement">
-              <div className="btn btn-outline btn-warning w-[110px]">
-                정산 내역
-              </div>
-            </a>
+            <button className="btn btn-outline btn-warning w-[120px]">
+              <Link href="/mystore/settlement">정산 내역</Link>
+            </button>
           </li>
         </ul>
       </div>
+      <style>
+        {`
+          #label:hover {
+            background-color: transparent;
+          }
+        `}
+      </style>
     </div>
   );
 }

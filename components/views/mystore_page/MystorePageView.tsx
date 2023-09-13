@@ -57,7 +57,6 @@ export default function MystorePageView() {
   return (
     <div>
       <Header />
-
       <div className="w-[500px] mx-auto">
         {storeInfo ? (
           <div className="w-[500px]">
@@ -66,8 +65,8 @@ export default function MystorePageView() {
               className="w-[100px] h-[100px] bg-blue-100 absolute top-[40px] left-[30px] rounded-lg"
               alt="이미지 없음"
             />
-            <div className="mt-[80px] my-[30px]">
-              <div className="text-3xl font-bold mb-3">
+            <div className="mt-[80px] mb-[40px]">
+              <div className="text-4xl font-bold mb-3">
                 {storeInfo.restaurantName}
               </div>
               <div>{storeInfo.address}</div>
@@ -80,7 +79,10 @@ export default function MystorePageView() {
         <div className="text-2xl font-bold mb-4">메뉴</div>
         {menuData && menuData.menuList.length > 0 ? (
           menuData.menuList.map((data, index) => (
-            <div className="card w-[500px] h-[100px] bg-base-100 shadow-xl flex flex-row mb-10 mx-0">
+            <div
+              className="card w-[500px] h-[100px] bg-base-100 shadow-xl flex flex-row mb-10 mx-0"
+              key={index}
+            >
               <figure>
                 {data.imageUrl ? (
                   <img
