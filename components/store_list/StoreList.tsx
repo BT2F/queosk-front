@@ -62,7 +62,7 @@ export default function StoreList({ location }: Props) {
           data.pages.map((pageGroup, i) => (
             <Fragment key={`page_group_${i}`}>
               {pageGroup.content.length ? (
-                pageGroup.content.map((v: IStoreRes, j: number) => (
+                pageGroup.content.map((v: IStoreRes) => (
                   <StoreCard {...v} key={`store-list-key-${v.id}`} />
                 ))
               ) : (
