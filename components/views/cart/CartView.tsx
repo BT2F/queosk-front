@@ -36,7 +36,7 @@ export default function CartView() {
 
   return (
     <div className="relative min-h-screen">
-      <header className="sticky top-0 w-full flex items-center justify-between bg-white text-xl font-bold py-2 border-b-2">
+      <header className="sticky top-0 w-full flex items-center justify-between bg-white text-xl font-bold py-2 border-b-2 z-10">
         <BiArrowBack className="text-2xl" onClick={() => router.back()} />
         <h2>장바구니</h2>
         <BiHomeAlt2
