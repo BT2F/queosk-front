@@ -1,8 +1,6 @@
 import AddForm from '@/components/edit_menu/AddForm';
 import { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
-import { useQuery } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
 
 interface FormData {
   imageFile: File;
@@ -27,187 +25,152 @@ interface EditDataType {
   imageFile?: File;
   status?: string;
 }
+///
+interface MenuItem {
+  id: number;
+  name: string;
+  imageUrl: string | null;
+  price: number;
+  status: 'ON_SALE' | 'SOLD_OUT';
+}
+
+interface MenuData {
+  menuList: MenuItem[];
+}
+
+interface addMenuType {
+  imageUrl: string;
+  name: string;
+  price: number;
+}
+
 export default function EditMenuView() {
   const [checkedMenu, setCheckedMenu] = useState<string[]>([]);
-  const [menuData, setMenuData] = useState<FormData[]>([]);
-  const [newMenuData, setNewMenuData] = useState<NewDataType>();
+  const [menuData, setMenuData] = useState<MenuData>({ menuList: [] });
+  const [newMenuData, setNewMenuData] = useState<addMenuType>();
   const [newImage, setNewImage] = useState<NewDataType>();
   const [nextId, setNextId] = useState<number>(1);
+  const [imageUrl, setImageUrl] = useState('');
 
   //메뉴 편집
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [editingMenu, setEditingMenu] = useState<any | null>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
 
-  //식당 메뉴 목록 조회
-  const { data: menuListData, refetch: refetchMenuList } = useQuery<any, any>({
-    queryKey: ['menuList'],
-    queryFn: async () => {
-      const response = await axios.get('/api/restaurant/:id/menus');
-      return response.data;
-    },
-  });
-
-  useEffect(() => {
-    refetchMenuList().then((data) => {
-      setMenuData(data?.data);
-    });
-  }, [newMenuData, menuListData]);
-
-  //식당 메뉴 목록 추가
-  const addNewMenuMutation = useMutation(
-    async (newMenuData: NewDataType) => {
-      const response = await axios.post('/api/restaurant/menus', newMenuData);
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
+  //(1)식당 메뉴 목록 조회
+  const getMenuListData = async () => {
+    try {
+      const response = await axios.get('/api/restaurants/6/menus');
+      const data = response.data;
+      console.log(data);
+      setMenuData(data);
+    } catch (error) {
+      console.error('식당 메뉴 목록 조회', error);
     }
-  );
+  };
+  useEffect(() => {
+    getMenuListData();
+  }, []);
 
+  //(2)식당 메뉴 목록 추가
+  const addNewMenu = async () => {
+    try {
+      const response = await axios.post('/api/restaurants/menus', newMenuData);
+      const data = response.data;
+      console.log(data);
+      getMenuListData();
+    } catch (error) {
+      console.error('식당 메뉴 목록 추가', error);
+    }
+  };
   useEffect(() => {
     if (newMenuData) {
-      addNewMenuMutation.mutate(newMenuData);
+      console.log(newMenuData);
+      addNewMenu();
     }
   }, [newMenuData]);
 
-  //메뉴 이미지 업로드 후 가져오기
-  const addNewImageMutation = useMutation(
-    async (newImage: NewDataType) => {
-      const response = await axios.post(
-        '/api/restaurant/menus/image',
-        newImage
-      );
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
+  //(4)메뉴 삭제
+  const deleteMenu = async () => {
+    try {
+      await axios.delete(`/api/restaurants/menus/${menuId}`);
+      getMenuListData();
+      setCheckedMenu([]);
+      setMenuId(null);
+    } catch (error) {
+      console.error('메뉴 삭제', error);
     }
-  );
-
+  };
+  const handleDelete = () => {
+    if (checkedMenu != null && checkedMenu.length > 0) {
+      if (menuId != null) {
+        deleteMenu();
+      }
+    }
+  };
   useEffect(() => {
-    if (newImage) {
-      addNewImageMutation.mutate(newImage);
-      console.log(newImage);
-    }
-  }, [newImage]);
+    const menuId = checkedMenu[0];
+    setMenuId(menuId);
+  }, [checkedMenu]);
 
-  //식당 메뉴 정보(이름, 가격) 수정
-  const editMenuInfoMutation = useMutation(
-    async (editMenuInfo: EditDataType) => {
-      const response = await axios.put(
-        `/api/restaurant/menus/${menuId}`,
-        editMenuInfo
-      );
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
+  //(5)식당 메뉴 정보(이름, 가격) 수정
+  const editMenuInfo = async (editMenuInfo: any) => {
+    try {
+      await axios.put(`/api/restaurants/menus/${menuId}`, editMenuInfo);
+      getMenuListData();
+    } catch (error) {
+      console.error('식당 메뉴 정보(이름, 가격) 수정', error);
     }
-  );
-
-  //메뉴 이미지 수정
-  const editMenuImageMutation = useMutation(
-    async (imageFile: EditDataType) => {
-      const response = await axios.put(
-        `/api/restaurant/menus/${menuId}/image`,
-        imageFile
-      );
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
-    }
-  );
-
-  //메뉴 주문가능여부 상태 수정
-  const editMenuStatusMutation = useMutation(
-    async (status: EditDataType) => {
-      const response = await axios.put(
-        `/api/restaurant/menus/${menuId}/status`,
-        status
-      );
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
-    }
-  );
-  const handleUpdateMenu = (
-    menuId: string,
-    editData: {
-      name: string;
-      price: number;
-      imageUrl: string;
-      imageFile: File;
-      status: string;
-    }
-  ) => {
-    if (checkedMenu.length > 0) {
-      setMenuId(menuId);
-      const { name, price } = editData;
-      editMenuInfoMutation.mutate({ menuId, name, price });
-
-      const { imageFile } = editData;
-      editMenuImageMutation.mutate({ menuId, imageFile });
-
-      const { status } = editData;
-      editMenuStatusMutation.mutate({ menuId, status });
+  };
+  //(6)메뉴 주문가능여부 상태 수정
+  const editMenuStatus = async (status: any) => {
+    try {
+      await axios.put(`/api/restaurants/menus/${menuId}/status`, status);
+      getMenuListData();
+    } catch (error) {
+      console.error('메뉴 이미지 수정 ', error);
     }
   };
 
-  //메뉴 삭제
-  const deleteMenuMutation = useMutation(
-    async (deleteMenu: any) => {
-      const response = await axios.delete(
-        `/api/restaurant/menus/${menuId}`,
-        deleteMenu
-      );
-      return response.data;
-    },
-    {
-      onSuccess: () => {
-        refetchMenuList();
-      },
-    }
-  );
+  //(7)메뉴 이미지 수정
+  const editMenuImage = async (imageFile: any) => {
+    console.log(imageFile);
 
-  const handleDelete = () => {
-    // const updatedMenuList = menuData.filter(
-    //   (menu) => !checkedMenu.includes(menu.id?.toString() as string)
-    // );
-    // setMenuData(updatedMenuList);
-    // setCheckedMenu([]);
+    const imgFormData = new FormData();
+    imgFormData.append('imageFile', imageFile);
+    console.log(imgFormData);
 
-    if (checkedMenu != null) {
-      checkedMenu.forEach((menuId) => {
-        setMenuId(menuId);
-        deleteMenuMutation.mutate(menuId);
+    try {
+      await axios.post(`/api/restaurants/menus/${menuId}/image`, imgFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
+    } catch (error) {
+      console.error('메뉴 이미지 수정 ', error);
+    }
+  };
+
+  const handleUpdateMenu = (editData: any) => {
+    if (checkedMenu.length > 0) {
+      setMenuId(menuId);
+      const { name, price, status, imageFile } = editData;
+      if (menuId != null) {
+        editMenuInfo({ name, price });
+        editMenuStatus({ status });
+        if (imageFile != undefined) {
+          editMenuImage({ imageFile });
+        }
+      }
     }
   };
 
   const getInfo = (data: any) => {
     console.log(data);
-    const { name, imageUrl, price, imageFile, status } = data;
+    const { name, price, imageFile, status } = data;
     const newData = { imageUrl, name, price };
     const editData = { name, price, imageUrl, imageFile, status };
     setNextId(nextId + 1);
     if (isEditClicked === true && checkedMenu.length > 0) {
-      const menuId = checkedMenu[0];
-      if (imageUrl) {
-        handleUpdateMenu(menuId, editData);
-      }
+      handleUpdateMenu(editData);
     } else {
       setNewMenuData(newData);
       setNewImage(imageFile);
@@ -224,19 +187,9 @@ export default function EditMenuView() {
     }
   };
 
-  const handleAllCheck = (checked: boolean) => {
-    if (checked) {
-      const idArray = menuData.map((el: any) => el.id?.toString() as string);
-      setCheckedMenu(idArray);
-      console.log(idArray);
-    } else {
-      setCheckedMenu([]);
-    }
-  };
-
   const handleEditClick = () => {
     if (checkedMenu.length > 0) {
-      const firstMenu = menuData.find(
+      const firstMenu = menuData.menuList.find(
         (menu) => menu.id?.toString() === checkedMenu[0]
       );
       if (firstMenu) {
@@ -252,6 +205,7 @@ export default function EditMenuView() {
         menuData={getInfo}
         isEditMode={isEditClicked}
         editingMenuData={editingMenu}
+        setImageUrl={setImageUrl}
       />
       <div>
         <div className="flex justify-between items-center">
@@ -274,14 +228,7 @@ export default function EditMenuView() {
         <div>
           <div className="h-[40px] flex items-center text-center border-y-[2px] border-zinc-300 font-bold">
             <div className="px-5 py-auto">
-              <input
-                type="checkbox"
-                onChange={(e) => handleAllCheck(e.target.checked)}
-                checked={
-                  menuData.length > 0 && checkedMenu.length === menuData.length
-                }
-                className="mx-auto"
-              />
+              <input type="checkbox" className="mx-auto invisible" />
             </div>
             <div className="w-1/6">No.</div>
             <div className="w-3/6">메뉴명</div>
@@ -289,8 +236,8 @@ export default function EditMenuView() {
             <div className="w-2/6">이미지</div>
             <div className="w-2/6">관리</div>
           </div>
-          {menuData ? (
-            menuData.map((data, index) => (
+          {menuData && menuData.menuList.length > 0 ? (
+            menuData.menuList.map((data, index) => (
               <div key={index} className="flex items-center text-center my-2">
                 <div className="px-5 py-auto">
                   <input
@@ -303,7 +250,7 @@ export default function EditMenuView() {
                     )}
                   />
                 </div>
-                <div className="w-1/6">{index + 1}</div>
+                <div className="w-1/6">{data.id}</div>
                 <div className="w-3/6">{data.name}</div>
                 <div className="w-2/6">{data.price} 원</div>
                 {data.imageUrl ? (

@@ -1,8 +1,9 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ChangeEvent, useState, useEffect } from 'react';
+import axios from '@/lib/axios';
 
 interface FormData {
-  image: File;
+  image: File | undefined;
   name: string;
   price: number;
   imageUrl?: string;
@@ -13,14 +14,16 @@ interface AddFormProps {
   menuData: (data: FormData, menuIndex?: number | null) => void;
   isEditMode: boolean;
   editingMenuData: FormData | null;
+  setImageUrl: (p: string) => void;
 }
 export default function AddForm({
   menuData,
   isEditMode,
   editingMenuData,
+  setImageUrl,
 }: AddFormProps) {
   const [imageUrlSave, setImageUrlSave] = useState('');
-  const [imageFileSave, setImageFileSave] = useState<File>();
+  const [imageFileSave, setImageFileSave] = useState<File | any>();
   const [inputName, setInputName] = useState('');
   const [inputPrice, setInputPrice] = useState('');
   const [inputFile, setInputFile] = useState('');
@@ -64,23 +67,71 @@ export default function AddForm({
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(imageUrlSave);
+    console.log(imageFileSave);
+
+    // const imgFormData = new FormData();
+    // if (imageFileSave) {
+    //   imgFormData.append('image', imageFileSave);
+    // }
+
+    // if (imageUrlSave) {
+    //   imgFormData.append('imageUrl', imageUrlSave);
+    // }
+
     const newData = {
       imageUrl: imageUrlSave,
       imageFile: imageFileSave,
       ...data,
+      price: parseFloat(inputPrice),
     };
     console.log(newData);
     menuData(newData);
     handleClick();
   };
+  useEffect(() => {
+    console.log(imageFileSave);
+  }, [imageFileSave]);
 
-  const saveFileImage = (e: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    console.log(inputFile);
+  }, [inputFile]);
+  useEffect(() => {
+    console.log(imageFileSave);
+  }, [imageFileSave]);
+
+  useEffect(() => {
+    console.log(imageUrlSave);
+  }, [imageUrlSave]);
+
+  const saveFileImage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setImageUrlSave(URL.createObjectURL(e.target.files[0]));
-      setImageFileSave(e.target.files[0]);
-      console.log(e.target.files[0]);
+      setInputFile(e.target.value);
+      const uploadedImage = e.target.files[0];
+      setImageFileSave(uploadedImage);
+      if (uploadedImage) {
+        console.log(uploadedImage);
+        const imageUrl = URL.createObjectURL(uploadedImage);
+        setImageUrlSave(imageUrl);
+
+        const imgFormData = new FormData();
+        imgFormData.append('imageFile', uploadedImage, uploadedImage.name);
+        console.log(imgFormData);
+        try {
+          const response = await axios.post(
+            '/api/restaurants/menus/image',
+            imgFormData,
+            {
+              headers: { 'Content-Type': 'multipart/form-data' },
+            }
+          );
+          setImageUrl(response.data.imageUrl);
+          console.log(response.data);
+        } catch (error) {
+          console.error('메뉴 이미지 업로드 후 가져오기', error);
+        }
+      }
     }
-    setInputFile(e.target.value);
   };
 
   return (
@@ -131,6 +182,7 @@ export default function AddForm({
             className="file-input file-input-bordered file-input-warning w-2/3 max-w-xs"
             onChange={saveFileImage}
             value={inputFile}
+            id="fileInput"
           />
           {isEditMode && (
             <select
