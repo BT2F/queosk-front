@@ -1,7 +1,7 @@
 import axios from '@/lib/axios';
 import { useState, useEffect } from 'react';
 import Header from '@/components/mystore_page/Header';
-import { rest } from 'msw';
+
 interface MenuItem {
   id: number;
   imageUrl: string;
@@ -31,7 +31,6 @@ export default function MystorePageView() {
     try {
       const response = await axios.get('api/restaurants');
       const data = response.data;
-      console.log(data);
       setStoreInfo(data);
       setRestaurantId(data.id);
     } catch (error) {
@@ -51,7 +50,6 @@ export default function MystorePageView() {
         );
         const data = response.data;
         setMenuData(data);
-        console.log(data);
       }
     } catch (error) {
       console.log('매장의 메뉴 목록', error);
