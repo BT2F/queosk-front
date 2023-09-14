@@ -34,7 +34,7 @@ export default function MystorePageView() {
       setStoreInfo(data);
       setRestaurantId(data.id);
     } catch (error) {
-      console.log('매장 정보', error);
+      console.error('매장 정보', error);
     }
   };
 
@@ -52,7 +52,7 @@ export default function MystorePageView() {
         setMenuData(data);
       }
     } catch (error) {
-      console.log('매장의 메뉴 목록', error);
+      console.error('매장의 메뉴 목록', error);
     }
   };
 
