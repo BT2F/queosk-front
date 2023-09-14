@@ -16,7 +16,7 @@ export default function KakaoCallbackView() {
     !!code && signWithKAKAO(code);
   }, [code]);
   return (
-    <div className="flex flex-col w-screen h-screen justify-center items-center">
+    <div className="flex flex-col w-full h-screen justify-center items-center">
       {!!code ? (
         <span className="loading loading-dots loading-lg scale-150" />
       ) : (
