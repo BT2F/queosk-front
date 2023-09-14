@@ -13,7 +13,7 @@ import { deleteCookie } from 'cookies-next';
 import { AUTH_KEY } from '@/constants/auth';
 
 export default function UserSignInView() {
-  const { signIn, OAuthRedirect, signOut } = useAuth();
+  const { signIn, OAuthRedirect } = useAuth();
 
   useEffect(() => {
     deleteCookie(AUTH_KEY.ACCESS_TOKEN);
