@@ -82,7 +82,9 @@ export default function useAuth() {
       router.replace(
         `https://kauth.kakao.com/oauth/authorize?client_id=${
           process.env.NEXT_PUBLIC_KAKAO_CLIENT || ''
-        }&redirect_uri=http://localhost:3000/auth/kakao/callback&response_type=code`,
+        }&redirect_uri=${
+          process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
+        }/auth/kakao/callback&response_type=code`,
       );
     }
   };
