@@ -1,6 +1,6 @@
 import AdditionalWaiting from '@/components/order_move/AdditionalWaiting';
 import CookedList from '@/components/order_move/CookedList';
-import OrderList from '@/components/order_move/OrderList';
+import OrderList, { OrderDataType } from '@/components/order_move/OrderList';
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
 
@@ -18,14 +18,6 @@ interface MenuInfo {
   status?: 'SOLD_OUT' | 'ON_SALE';
 }
 
-interface OrderDataType {
-  id: number;
-  table: TableInfo;
-  menu: MenuInfo;
-  orderStatus: 'IN_PROGRESS' | 'DONE' | 'CANCELED';
-  count: number;
-}
-
 export default function OrderListMoveView() {
   const [visibleStateIndex, setVisibleStateIndex] = useState<number[]>([]);
   const [orderData, setOrderData] = useState<OrderDataType[]>([]);
@@ -40,7 +32,7 @@ export default function OrderListMoveView() {
       setOrderData(data);
       const newVisibleStateIndex = Array.from(
         { length: data.length },
-        (_, i) => i
+        (_, i) => i,
       );
       setVisibleStateIndex(newVisibleStateIndex);
     } catch (error) {
