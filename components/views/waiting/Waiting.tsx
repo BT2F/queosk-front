@@ -38,8 +38,8 @@ export default function Waiting() {
     try {
       await axios.delete(`/api/restaurants/${storeId}/user/queue`);
       console.log(`웨이팅 취소 성공`);
+      router.push(`/store`);
       alert('웨이팅이 취소되었습니다.');
-      router.push(`/store/`);
     } catch (error) {
       console.error(error);
     }
