@@ -25,6 +25,9 @@ export default function TableView() {
     }
   };
   useEffect(() => {
+    getTables();
+  }, []);
+  useEffect(() => {
     const intervalId = setInterval(() => {
       getTables();
     }, 10000);
