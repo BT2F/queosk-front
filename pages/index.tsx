@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import Logo from '@/public/asset/logo/BT2F.png';
+import Logo from '@/public/asset/logo/queosk.png';
 import Image from 'next/image';
 import { getCookie } from 'cookies-next';
 import { AUTH_KEY } from '@/constants/auth';

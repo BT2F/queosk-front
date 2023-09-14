@@ -1,12 +1,11 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes } from 'react';
 
-interface LayOutProps extends HTMLAttributes<HTMLDivElement> {
-}
+interface LayOutProps extends HTMLAttributes<HTMLDivElement> {}
 
-export default function WatingLayOut (props:LayOutProps) {
+export default function WatingLayOut(props: LayOutProps) {
   return (
     <div
-      className={`num-of-visitor-container max-w-[80%] md:max-w-[640px] h-[100vh] mx-auto shadow-lg relative ${props.className}`}
+      className={`num-of-visitor-container min-h-screen mx-auto relative ${props.className}`}
     >
       {props.children}
     </div>

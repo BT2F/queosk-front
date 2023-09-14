@@ -44,7 +44,7 @@ export default function StoreDetailCard({ storeId }: Props) {
               </>
             )}
           </div>
-          <Link href={`/store/${storeId}/wating`} className="">
+          <Link href={`/store/${storeId}/resistration`}>
             <button className="btn btn-md bg-yellow-400 hover:bg-yellow-300 duration-300">
               웨이팅 신청하러 가기
             </button>
