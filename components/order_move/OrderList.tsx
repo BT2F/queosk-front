@@ -10,7 +10,7 @@ interface MenuInfo {
   status?: 'SOLD_OUT' | 'ON_SALE';
 }
 
-interface OrderDataType {
+export interface OrderDataType {
   id: number;
   tableId: number;
   menu: MenuInfo;
