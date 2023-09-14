@@ -1,11 +1,6 @@
 import StateCard from './StateCard';
 import LayoutState from './LayoutState';
 
-interface TableInfo {
-  id: number;
-  status?: 'USING' | 'OPEN';
-}
-
 interface MenuInfo {
   id?: number;
   restaurantId?: number;
@@ -15,9 +10,9 @@ interface MenuInfo {
   status?: 'SOLD_OUT' | 'ON_SALE';
 }
 
-interface OrderDataType {
+export interface OrderDataType {
   id: number;
-  table: TableInfo;
+  tableId: number;
   menu: MenuInfo;
   orderStatus: 'IN_PROGRESS' | 'DONE' | 'CANCELED';
   count: number;
@@ -43,7 +38,7 @@ export default function OrderList({
         <StateCard
           key={index}
           orderId={data[index].id}
-          tableId={data[index].table.id}
+          tableId={data[index].tableId}
           name={data[index].menu.name}
           orderStatus={data[index].orderStatus}
           count={data[index].count}

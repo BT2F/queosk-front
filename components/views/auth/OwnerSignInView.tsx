@@ -8,10 +8,16 @@ import Link from 'next/link';
 
 import { useForm } from 'react-hook-form';
 import fixInputLabel, { IFixInputLabel } from '@/lib/fixInputLabel';
+import { useEffect } from 'react';
+import { deleteCookie } from 'cookies-next';
+import { AUTH_KEY } from '@/constants/auth';
 
 export default function OwnerSignInView() {
   const { signIn } = useAuth();
-
+  useEffect(() => {
+    deleteCookie(AUTH_KEY.ACCESS_TOKEN);
+    deleteCookie(AUTH_KEY.REFRESH_TOKEN);
+  }, []);
   const {
     register,
     handleSubmit,

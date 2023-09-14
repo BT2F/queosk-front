@@ -15,23 +15,22 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
   const [previousComponent, setPreviousComponent] = useState(false);
   const router = useRouter();
   const { storeId } = router.query;
-  const [storeData, setStoreData] = useState(Object)
-  const [queueData, setQueueData] = useState(Object)
-  console.log(storeId);
+  const [storeData, setStoreData] = useState(Object);
+  const [queueData, setQueueData] = useState(Object);
 
   const handleResistration = async () => {
     const numberOfPeople = {
-      numberOfParty: count
-    }
+      numberOfParty: count,
+    };
 
     try {
       await axios.post(`/api/restaurants/${storeId}/queue`, numberOfPeople);
-      alert('웨이팅 등록에 성공했습니다.')
-      router.push(`/store/${storeId}/waiting`)
-    } catch(error) {
-      console.error('등록 실패', error)
+      alert('웨이팅 등록에 성공했습니다.');
+      router.push(`/store/${storeId}/waiting`);
+    } catch (error) {
+      console.error('등록 실패', error);
     }
-  }
+  };
 
   useEffect(() => {
     const getServerData = async () => {
@@ -42,20 +41,16 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
       } catch (error) {
         console.error('데이터 로드 오류', error);
       }
-
     };
     const getStoreQueue = async () => {
       try {
-        const response = await axios.get(
-          `/api/restaurants/${storeId}/queue`
-        );
+        const response = await axios.get(`/api/restaurants/${storeId}/queue`);
         const data = response.data;
-        setQueueData(data)
-        console.log(data);
+        setQueueData(data);
       } catch (error) {
         console.error('데이터 로드 오류', error);
       }
-    }
+    };
     getStoreQueue();
     getServerData();
   }, []);
@@ -93,7 +88,7 @@ export default function WaitingRegistration({ count }: previousComponentProps) {
             <h3>총 입장 인원</h3>
             <h3>{count}명</h3>
           </div>
-          <div className="waiting-footer fixed bottom-0 max-w-[80%] md:max-w-[640px] w-[100%]">
+          <div className="waiting-footer fixed bottom-0 left-0 right-0 max-w-[640px] mx-auto">
             <div className="flex-col">
               <WaitingButton
                 children={'웨이팅 등록하기'}

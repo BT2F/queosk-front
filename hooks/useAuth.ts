@@ -1,8 +1,9 @@
 import axios from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { AUTH_MESSAGE } from '@/constants/auth';
+import { AUTH_KEY, AUTH_MESSAGE } from '@/constants/auth';
 import useUser from '@/hooks/useUser';
+import { deleteCookie } from 'cookies-next';
 
 export default function useAuth() {
   const router = useRouter();
@@ -66,7 +67,12 @@ export default function useAuth() {
   const signOut = async (type: 'restaurant' | 'user' = 'user') =>
     await axios
       .post(`/api/${type}s/signout`)
-      .then(() => router.replace('/'))
+      .then(() => {
+        deleteCookie(AUTH_KEY.ACCESS_TOKEN);
+        deleteCookie(AUTH_KEY.REFRESH_TOKEN);
+
+        router.replace('/');
+      })
       .catch((e) =>
         toast.error(e.response.data.message || AUTH_MESSAGE.SIGN_OUT_ERROR),
       );
@@ -76,7 +82,9 @@ export default function useAuth() {
       router.replace(
         `https://kauth.kakao.com/oauth/authorize?client_id=${
           process.env.NEXT_PUBLIC_KAKAO_CLIENT || ''
-        }&redirect_uri=http://localhost:3000/auth/kakao/callback&response_type=code`,
+        }&redirect_uri=${
+          process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
+        }/auth/kakao/callback&response_type=code`,
       );
     }
   };

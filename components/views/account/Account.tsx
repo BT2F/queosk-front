@@ -4,17 +4,16 @@ import AccountProfileInfo from '../../account/AccountProfileInfo';
 import ProfileListHeader from '../../account/ProfileListHeader';
 import ProfileListItem from '../../account/ProfileListItem';
 import Modal from '../../account/Modal';
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import { useRouter } from 'next/router';
 import { regx } from '@/lib/regx';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
+import useAuth from '@/hooks/useAuth';
 
 export default function Account() {
-  const router = useRouter();
   const [profileModal, setProfileModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [imgUrl, setImgUrl] = useState(placeholderImgUrl("100x100"));
+  const [imgUrl, setImgUrl] = useState(placeholderImgUrl('100x100'));
   const [imgData, setImgData] = useState(Object);
   const [imgChanged, setImgChanged] = useState(false);
   const [nicknameValue, setNicknameValue] = useState<string>('');
@@ -24,6 +23,7 @@ export default function Account() {
   const [existPassword, setExistPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const { signOut } = useAuth();
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const uploadedImage = e.target.files?.[0];
@@ -79,7 +79,7 @@ export default function Account() {
           const imgFormData = new FormData();
           imgFormData.append('image', imgData);
 
-          console.log(imgFormData)
+          console.log(imgFormData);
           await axios.put(`/api/users/image`, imgFormData, {
             headers: {
               'content-Type': 'multipart/form-data',
@@ -103,53 +103,43 @@ export default function Account() {
     }
   };
 
-  const handleNewPassword = async() => {
+  const handleNewPassword = async () => {
     const passwordData = {
       existingPassword: existPassword,
-      newPassword: newPassword
-    }
-    console.log(existPassword)
-    console.log(newPassword)
+      newPassword: newPassword,
+    };
+    console.log(existPassword);
+    console.log(newPassword);
     try {
-      await axios.put('/api/users/password/change', passwordData).then((res) => {
-        if(res.status === 204) {
-          console.log('비밀번호 성공')
-        }
-      })
-    } catch(error) {
+      await axios
+        .put('/api/users/password/change', passwordData)
+        .then((res) => {
+          if (res.status === 204) {
+            console.log('비밀번호 성공');
+          }
+        });
+    } catch (error) {
       console.error(error);
     }
-    
-  }
+  };
 
-  const handleSignOut = () => {
-    try {
-      axios.post('/api/users/signout').then((response) => {
-        if (response.status === 204) {
-          // 로그아웃 성공
-          console.log('로그아웃되었습니다.');
-        } else {
-          // 로그아웃 실패
-          console.error('로그아웃 실패', response.status);
-        }
-      });
-      router.push('/store')
-    } catch (error) {
-      console.error('로그아웃 에러', error);
-    }
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   const handleDeleteAccount = async () => {
     const sendPassword = {
-      password: "123123"
-    }
+      password: '123123',
+    };
     try {
-      await axios.delete('/api/users/', {data: sendPassword}).then((response) => {
-        if (response.status === 204) {
-          // 회원탈퇴 성공
-          console.log('회원탈퇴 되었습니다');
-        }
-      });
+      await axios
+        .delete('/api/users/', { data: sendPassword })
+        .then((response) => {
+          if (response.status === 204) {
+            // 회원탈퇴 성공
+            console.log('회원탈퇴 되었습니다');
+          }
+        });
     } catch (error) {
       console.error('회원탈퇴 에러', error);
     }
@@ -179,7 +169,10 @@ export default function Account() {
               <AccountHeader children={'프로필 수정'} />
               <Modal.Form>
                 <Modal.ProfileInfoContainer>
-                  <Modal.ProfileImg src={imgUrl} alt={'프로필 이미지'}>
+                  <Modal.ProfileImg
+                    src={imgUrl || placeholderImgUrl('100x100')}
+                    alt={'프로필 이미지'}
+                  >
                     <Modal.ProfileInput onChange={handleImageChange} />
                   </Modal.ProfileImg>
                   <Modal.ProfileText
@@ -295,9 +288,11 @@ export default function Account() {
       <AccountLayOut>
         <AccountHeader children={'마이페이지'} />
         <AccountProfileInfo
-          imgUrl={userData.imageUrl}
+          imgUrl={userData.imageUrl || placeholderImgUrl('100x100')}
           profileNickName={userData.nickName}
-          profileNumber={userData.phone}
+          profileNumber={
+            (userData.loginType !== 'KAKAO' && userData.phone) || ''
+          }
           className="mb-1"
         />
         <hr className="my-5 h-0.5" />

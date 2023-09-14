@@ -9,7 +9,7 @@ export default function StoreCard(props: IStoreRes) {
       href={`/store/${props.id}`}
       className="card card-side bg-base-100 shadow-xl [&+&]:mt-4 h-[128px]"
     >
-      <figure className="relative !w-[128px]">
+      <figure className="relative !w-[128px] min-w-[128px]">
         <Image
           src={props.imageUrl || placeholderImgUrl('128x128')}
           className="w-[128px]"

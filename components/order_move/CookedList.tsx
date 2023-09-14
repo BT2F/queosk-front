@@ -1,10 +1,5 @@
 import LayoutState from './LayoutState';
 
-interface TableInfo {
-  id: number;
-  status?: 'USING' | 'OPEN';
-}
-
 interface MenuInfo {
   id?: number;
   restaurantId?: number;
@@ -16,7 +11,7 @@ interface MenuInfo {
 
 interface CookedDataType {
   id: number;
-  table: TableInfo;
+  tableId: number;
   menu: MenuInfo;
   orderStatus: 'IN_PROGRESS' | 'DONE' | 'CANCELED';
   count: number;
@@ -37,7 +32,7 @@ export default function CookedList({ cookedMenuList }: CookedListProps) {
             key={index}
             className="flex flex-col justify-center gap-3 h-[100px] border-b-2 border-zinc-200"
           >
-            <div className="font-bold px-2">테이블 {item.table.id}</div>
+            <div className="font-bold px-2">테이블 {item.tableId}</div>
             <div className="px-2 flex justify-between">
               <span>{item.menu.name}</span>
               <span>x {item.count}</span>

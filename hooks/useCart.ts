@@ -3,6 +3,7 @@ import devtools from '@/lib/zustand/devtools';
 import { IMenuRes } from '@/types/store.type';
 import { persist } from 'zustand/middleware';
 import { STORE_LIST_KEY } from '@/constants/store_list';
+import { toast } from 'react-toastify';
 
 interface ICart {
   storeId: string;
@@ -41,6 +42,7 @@ const useCart = create<IUseCart>()(
         add: (p) =>
           set((state) => {
             const inCartItem = state.cart.menuList.find((v) => v.id === p.id);
+            toast.success(`장바구니에 ${p.name} 추가!`);
             return {
               cart: {
                 ...state.cart,
