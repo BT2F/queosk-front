@@ -23,7 +23,10 @@ SignLayout.Title = (props: HTMLAttributes<HTMLHeadElement>) => (
 );
 
 SignLayout.SubTitle = (props: HTMLAttributes<HTMLParagraphElement>) => (
-  <p className="mt-2 text-gray-600 mb-10" {...props} />
+  <p
+    className="mt-2 text-gray-600 mb-10 flex justify-between items-center"
+    {...props}
+  />
 );
 
 SignLayout.InputContainer = (props: HTMLAttributes<HTMLDivElement>) => (

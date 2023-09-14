@@ -8,9 +8,17 @@ import Input from '@/components/common/Input';
 import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
 import fixInputLabel, { IFixInputLabel } from '@/lib/fixInputLabel';
+import { useEffect } from 'react';
+import { deleteCookie } from 'cookies-next';
+import { AUTH_KEY } from '@/constants/auth';
 
 export default function UserSignInView() {
-  const { signIn, OAuthRedirect } = useAuth();
+  const { signIn, OAuthRedirect, signOut } = useAuth();
+
+  useEffect(() => {
+    deleteCookie(AUTH_KEY.ACCESS_TOKEN);
+    deleteCookie(AUTH_KEY.REFRESH_TOKEN);
+  }, []);
 
   const {
     register,
@@ -57,7 +65,12 @@ export default function UserSignInView() {
     <SignLayout>
       <SignLayout.Form onSubmit={onSubmit} className="w-[384px]">
         <SignLayout.Title>로그인</SignLayout.Title>
-        <SignLayout.SubTitle>회원 로그인</SignLayout.SubTitle>
+        <SignLayout.SubTitle>
+          회원 로그인
+          <Link href={'/mystore/signin'} className="text-sm">
+            (사업자 로그인 하러가기)
+          </Link>
+        </SignLayout.SubTitle>
         <Button color="kakao" type="button" onClick={onClickKAKAOLogin}>
           <span className="flex justify-center items-center gap-2">
             <RiKakaoTalkFill className="text-2xl" />
