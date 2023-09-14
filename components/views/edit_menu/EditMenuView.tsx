@@ -50,25 +50,45 @@ export default function EditMenuView() {
   const [newImage, setNewImage] = useState<NewDataType>();
   const [nextId, setNextId] = useState<number>(1);
   const [imageUrl, setImageUrl] = useState('');
+  const [restaurantId, setRestaurantId] = useState<number>();
 
   //메뉴 편집
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [editingMenu, setEditingMenu] = useState<EditDataType | null>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
 
+  const getRestaurantInfo = async () => {
+    try {
+      const response = await axios.get('/api/restaurants');
+      const data = response.data;
+      setRestaurantId(data.id);
+    } catch (error) {
+      console.error('매장 정보', error);
+    }
+  };
+
+  useEffect(() => {
+    getRestaurantInfo();
+  }, []);
+
   //(1)식당 메뉴 목록 조회
   const getMenuListData = async () => {
     try {
-      const response = await axios.get('/api/restaurants/6/menus');
-      const data = response.data;
-      setMenuData(data);
+      if (restaurantId !== undefined) {
+        const response = await axios.get(
+          `/api/restaurants/${restaurantId}/menus`
+        );
+        const data = response.data;
+        setMenuData(data);
+      }
     } catch (error) {
       console.error('식당 메뉴 목록 조회', error);
     }
   };
+
   useEffect(() => {
     getMenuListData();
-  }, []);
+  }, [restaurantId]);
 
   //(2)식당 메뉴 목록 추가
   const addNewMenu = async () => {
