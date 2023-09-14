@@ -92,7 +92,7 @@ export default function MyWaiting() {
                   </div>
                   <div className="card-actions mt-auto">
                     <button
-                      className="btn btn-primary w-full"
+                      className="btn bg-yellow-400 hover:bg-yellow-300 w-full"
                       onClick={() => realTimeQueueCheck(item.restaurantDto.id)}
                     >
                       실시간 확인
