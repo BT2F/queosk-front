@@ -66,11 +66,19 @@ export default function MystorePageView() {
       <div className="w-[500px] mx-auto absoulte">
         {storeInfo ? (
           <div className="w-[500px]">
-            <img
-              src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-              className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
-              alt="이미지 없음"
-            />
+            {storeInfo.imageUrl ? (
+              <img
+                src={storeInfo.imageUrl}
+                className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
+              />
+            ) : (
+              <img
+                src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
+                className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
+                alt="이미지 없음"
+              />
+            )}
+
             <div className="mt-[100px] mb-[40px]">
               <div className="text-4xl font-bold mb-3">
                 {storeInfo.restaurantName}
