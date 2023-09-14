@@ -1,6 +1,7 @@
 import axios from '@/lib/axios';
 import { useState, useEffect } from 'react';
 import Header from '@/components/mystore_page/Header';
+import { rest } from 'msw';
 interface MenuItem {
   id: number;
   imageUrl: string;
@@ -24,20 +25,7 @@ interface StoreInfoType {
 export default function MystorePageView() {
   const [menuData, setMenuData] = useState<MenuDataType>();
   const [storeInfo, setStoreInfo] = useState<StoreInfoType>();
-
-  const getMenuList = async () => {
-    try {
-      const response = await axios.get('api/restaurants/6/menus');
-      const data = response.data;
-      setMenuData(data);
-    } catch (error) {
-      console.log('매장의 메뉴 목록', error);
-    }
-  };
-
-  useEffect(() => {
-    getMenuList();
-  }, []);
+  const [restaurantId, setRestaurantId] = useState<number>();
 
   const getRestaurantInfo = async () => {
     try {
@@ -45,6 +33,7 @@ export default function MystorePageView() {
       const data = response.data;
       console.log(data);
       setStoreInfo(data);
+      setRestaurantId(data.id);
     } catch (error) {
       console.log('매장 정보', error);
     }
@@ -54,18 +43,37 @@ export default function MystorePageView() {
     getRestaurantInfo();
   }, []);
 
+  const getMenuList = async () => {
+    try {
+      if (restaurantId !== undefined) {
+        const response = await axios.get(
+          `api/restaurants/${restaurantId}/menus`
+        );
+        const data = response.data;
+        setMenuData(data);
+        console.log(data);
+      }
+    } catch (error) {
+      console.log('매장의 메뉴 목록', error);
+    }
+  };
+
+  useEffect(() => {
+    getMenuList();
+  }, [restaurantId]);
+
   return (
     <div>
       <Header />
-      <div className="w-[500px] mx-auto">
+      <div className="w-[500px] mx-auto absoulte">
         {storeInfo ? (
           <div className="w-[500px]">
             <img
               src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-              className="w-[100px] h-[100px] bg-blue-100 absolute top-[40px] left-[30px] rounded-lg"
+              className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
               alt="이미지 없음"
             />
-            <div className="mt-[80px] mb-[40px]">
+            <div className="mt-[100px] mb-[40px]">
               <div className="text-4xl font-bold mb-3">
                 {storeInfo.restaurantName}
               </div>
