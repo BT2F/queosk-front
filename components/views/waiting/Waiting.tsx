@@ -2,7 +2,7 @@ import axios from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+
 
 type ICurrentDate = {
   date?: object;
@@ -30,9 +30,9 @@ const formattedTime = `${getCurrentDate.hours}:${getCurrentDate.minutes}`;
 
 export default function Waiting() {
   const router = useRouter();
-  const [storeData, setStoreData] = useState(Object);
   const { storeId } = router.query;
   const QUEUE_QUERY_KEY = 'queueData';
+  const STORE_QUERY_KEY = 'storeData';
 
   const handleQueueCancel = async () => {
     try {
@@ -50,36 +50,37 @@ export default function Waiting() {
     return response.data;
   };
 
+  const getServerData = async () => {
+    try {
+      const response = await axios.get(`/api/restaurants/${storeId}/details`);
+      const data = response.data;
+      return data;
+    } catch (error) {
+      console.error('데이터 로드 오류', error);
+    }
+  };
+
   const { data: queueData, error } = useQuery({
     queryKey: [QUEUE_QUERY_KEY, storeId],
     queryFn: getQueueData,
     refetchInterval: 10000,
   });
 
+  const { data: storeData } = useQuery({
+    queryKey: [STORE_QUERY_KEY],
+    queryFn: getServerData,
+  });
+
   if (error) {
     console.error('큐 로드 오류', error);
   }
-
-  useEffect(() => {
-    const getServerData = async () => {
-      try {
-        const response = await axios.get(`/api/restaurants/${storeId}/details`);
-        const data = response.data;
-        setStoreData(data.restaurantDto);
-      } catch (error) {
-        console.error('데이터 로드 오류', error);
-      }
-    };
-
-    getServerData();
-  }, []);
 
   return (
     <>
       <div className="waiting-container mx-auto">
         <div className="navbar bg-base-100 mb-12">
-          <Link href="/" className="text-xl normal-case ">
-            Quosk
+          <Link href="/store" className="text-xl normal-case ">
+            Qosk
           </Link>
         </div>
         <div className="waiting-info-container border rounded-2xl mb-8">
