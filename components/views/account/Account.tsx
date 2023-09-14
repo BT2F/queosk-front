@@ -6,13 +6,11 @@ import ProfileListItem from '../../account/ProfileListItem';
 import Modal from '../../account/Modal';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import { useRouter } from 'next/router';
 import { regx } from '@/lib/regx';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 import useAuth from '@/hooks/useAuth';
 
 export default function Account() {
-  const router = useRouter();
   const [profileModal, setProfileModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
   const [imgUrl, setImgUrl] = useState(placeholderImgUrl('100x100'));

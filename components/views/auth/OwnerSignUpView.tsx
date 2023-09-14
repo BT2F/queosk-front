@@ -1,5 +1,5 @@
 import { useDaumPostcodePopup } from 'react-daum-postcode';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IFormRegister } from '@/types/auth.type';
 import { regx } from '@/lib/regx';
@@ -8,12 +8,17 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
+import { deleteCookie } from 'cookies-next';
+import { AUTH_KEY } from '@/constants/auth';
 
 export default function OwnerSignUpView() {
   const open = useDaumPostcodePopup();
   const [addressValue, setAddressValue] = useState('');
   const { signUp } = useAuth();
-
+  useEffect(() => {
+    deleteCookie(AUTH_KEY.ACCESS_TOKEN);
+    deleteCookie(AUTH_KEY.REFRESH_TOKEN);
+  }, []);
   const {
     register,
     handleSubmit,
