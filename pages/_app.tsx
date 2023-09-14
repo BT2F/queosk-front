@@ -6,6 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MSWWraaper from '@/components/msw/MSWWraaper';
 import RootLayout from '@/components/common/RootLayout';
+import { useRouter } from 'next/router';
+import { AnimatePresence } from 'framer-motion';
 
 const client = new QueryClient({
   defaultOptions: {
@@ -16,14 +18,18 @@ const client = new QueryClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
   return (
-    <RootLayout>
-      <MSWWraaper>
-        <QueryClientProvider client={client}>
-          <Component {...pageProps} />
-          <ToastContainer />
-        </QueryClientProvider>
-      </MSWWraaper>
-    </RootLayout>
+    <AnimatePresence initial={false} mode={'popLayout'}>
+      <RootLayout key={router.asPath}>
+        <MSWWraaper>
+          <QueryClientProvider client={client}>
+            <Component {...pageProps} />
+            <ToastContainer />
+          </QueryClientProvider>
+        </MSWWraaper>
+      </RootLayout>
+    </AnimatePresence>
   );
 }
