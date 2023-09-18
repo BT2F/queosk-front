@@ -1,6 +1,8 @@
 import { NextPageContext } from 'next';
+import { ReactElement } from 'react';
+import Layout from '@/components/common/Layout';
 
-export default function Index() {
+export default function Page() {
   return <></>;
 }
 
@@ -22,3 +24,5 @@ export const getServerSideProps = (context: NextPageContext) => {
     },
   };
 };
+
+Page.getLayout = (page: ReactElement) => <Layout.Mobile>{page}</Layout.Mobile>;

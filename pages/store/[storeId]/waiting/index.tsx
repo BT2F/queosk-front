@@ -1,10 +1,10 @@
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
-const Waiting = dynamic(() => import('@/components/views/waiting/Waiting'),
-  {
-    ssr: false,
-  }
-);
+import { ReactElement, Suspense } from 'react';
+import Layout from '@/components/common/Layout';
+
+const Waiting = dynamic(() => import('@/components/views/waiting/Waiting'), {
+  ssr: false,
+});
 
 export default function Page() {
   return (
@@ -14,3 +14,4 @@ export default function Page() {
   );
 }
 
+Page.getLayout = (page: ReactElement) => <Layout.Mobile>{page}</Layout.Mobile>;
