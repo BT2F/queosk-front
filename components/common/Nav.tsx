@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function Nav() {
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 h-16 max-w-[640px] px-6 mx-auto flex justify-between items-center bg-white border-t-2 
+      className={`sticky bottom-0 left-0 right-0 max-w-[640px] mx-auto h-16 w-full px-6 flex justify-between items-center bg-white border-t-2 
         [&>*]:w-24  [&>*]:flex  [&>*]:flex-col  [&>*]:justify-center  [&>*]:items-center 
       `}
     >
