@@ -1,26 +1,18 @@
-import Link from 'next/link';
+import { BsArrowLeftShort } from 'react-icons/bs';
 import { HTMLAttributes } from 'react';
 
 interface HeaderProps extends HTMLAttributes<HTMLDivElement> {
-  linkOrButton: boolean;
-  storeId?: string | string[];
   onClick?: () => void;
 }
 
 export default function WaitingTopHeader(props: HeaderProps) {
   return (
-    <div className={`flex text-xl py-4 px-6 font-bold ${props.className}`}>
-      {props.linkOrButton ? (
-        <Link href={`/store/${props.storeId}`} className="mr-3">
-          &#8592;
-        </Link>
-      ) : (
-        <button className="mr-3" onClick={props.onClick}>
-          &#8592;
-        </button>
-      )}
-
-      <h1>{props.children}</h1>
-    </div>
+    <header className="flex font-bold text-xl py-2 [&>button]:w-12 [&>span]:w-12">
+      <button type="button" onClick={props.onClick}>
+        {<BsArrowLeftShort className="text-4xl" />}
+      </button>
+      <p className="flex flex-1 justify-center items-center">{props.children}</p>
+      <span />
+    </header>
   );
 }

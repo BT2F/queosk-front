@@ -1,8 +1,8 @@
 import axios from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-
+import Header from '@/components/common/Header';
+import { USER_QUEUES, STORE_DATA } from '@/constants/user_queue';
 
 type ICurrentDate = {
   date?: object;
@@ -61,13 +61,13 @@ export default function Waiting() {
   };
 
   const { data: queueData, error } = useQuery({
-    queryKey: [QUEUE_QUERY_KEY, storeId],
+    queryKey: [USER_QUEUES.USER_QUEUE_DATA, storeId],
     queryFn: getQueueData,
     refetchInterval: 10000,
   });
 
   const { data: storeData } = useQuery({
-    queryKey: [STORE_QUERY_KEY],
+    queryKey: [STORE_DATA.STORE_DATA],
     queryFn: getServerData,
   });
 
@@ -78,11 +78,7 @@ export default function Waiting() {
   return (
     <>
       <div className="waiting-container mx-auto">
-        <div className="navbar bg-base-100 mb-12">
-          <Link href="/store" className="text-xl normal-case ">
-            Qosk
-          </Link>
-        </div>
+        <Header title='Queosk' href='/mywaiting' />
         <div className="waiting-info-container border rounded-2xl mb-8">
           <div className="waiting-header py-4 border-b-2 border-gray-300">
             <h1 className="text-2xl text-center mb-2">대기 정보</h1>

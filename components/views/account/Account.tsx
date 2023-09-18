@@ -9,6 +9,7 @@ import axios from '@/lib/axios';
 import { regx } from '@/lib/regx';
 import { placeholderImgUrl } from '@/lib/placeholderImgUrl';
 import useAuth from '@/hooks/useAuth';
+import Header from '@/components/common/Header';
 
 export default function Account() {
   const [profileModal, setProfileModal] = useState(false);
@@ -286,7 +287,7 @@ export default function Account() {
       )}
 
       <AccountLayOut>
-        <AccountHeader children={'마이페이지'} />
+        <Header title={'마이페이지'} />
         <AccountProfileInfo
           imgUrl={userData.imageUrl || placeholderImgUrl('100x100')}
           profileNickName={userData.nickName}

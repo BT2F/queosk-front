@@ -4,6 +4,7 @@ import { useState } from 'react';
 import WaitingLayOut from '../../waiting/WaitingLayOut';
 import WaitingTopHeader from '../../waiting/WaitingTopHeader';
 import WaitingButton from '../../waiting/WaitingButton';
+import Header from '@/components/common/Header';
 
 interface numOfCountProps {
   numOfCount?: number;
@@ -21,11 +22,7 @@ export default function NumsOfVisitor({ numOfCount }: numOfCountProps) {
         <WaitingRegistration count={count} />
       ) : (
         <WaitingLayOut>
-          <WaitingTopHeader
-            children={'방문 인원 선택하기'}
-            linkOrButton={true}
-            storeId={storeId}
-          />
+          <Header title={'방문 인원 선택하기'} href={`/store/${storeId}`} />
           <div className="select-visitor">
             <h1 className="text-xl font-bold px-5 mt-4">
               방문 인원을 선택해주세요.

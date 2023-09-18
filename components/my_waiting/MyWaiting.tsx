@@ -3,6 +3,8 @@ import axios from '@/lib/axios';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { USER_QUEUES } from '@/constants/user_queue';
+import Header from '../common/Header';
+
 
 type restaurantDtoType = {
   address: string;
@@ -60,12 +62,7 @@ export default function MyWaiting() {
   return (
     <>
       <div className={`w-full min-h-screen mx-auto relative`}>
-        <div className={`flex text-xl py-4 px-5 font-bold`}>
-          <span className="mr-3 cursor-pointer" onClick={() => router.back()}>
-            &#8592;
-          </span>
-          <h1>나의 웨이팅</h1>
-        </div>
+        <Header title={'나의 웨이팅'} href={'/store'} />
         <div className="waiting-list grid grid-cols-1 min-[500px]:grid-cols-2 gap-4 p-2">
           {userQueues.map((item) => {
             return (
