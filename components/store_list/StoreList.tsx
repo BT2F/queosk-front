@@ -47,7 +47,7 @@ export default function StoreList({ location }: Props) {
     data?.pages.at(-1).pageable.pageNumber + 1 < data?.pages.at(-1).totalPages;
 
   return (
-    <div className="mt-5 mb-16">
+    <div className="mt-5 mb-8">
       <InfiniteScroll
         pageStart={0}
         loadMore={() => fetchNextPage()}
