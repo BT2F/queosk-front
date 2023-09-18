@@ -24,8 +24,10 @@ export default function useAuth() {
           toast.error(e.response.data.message || AUTH_MESSAGE.SIGN_IN_ERROR),
         );
     } else {
+      const isDev = process.env.NODE_ENV === 'development';
+      const url = `/api/kakao/signin${isDev ? '/test' : ''}`;
       return await axios
-        .post('/api/kakao/signin', { code: data.code })
+        .post(url, { code: data.code })
         .then(() => {
           router.replace('/store');
         })
