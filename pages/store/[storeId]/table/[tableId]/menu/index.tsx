@@ -1,12 +1,13 @@
 import { NextPageContext } from 'next';
 import StoreMenuView from '@/components/views/store_detail/StoreMenuView';
-import { Suspense } from 'react';
+import { ReactElement, Suspense } from 'react';
+import Layout from '@/components/common/Layout';
 
 interface Props {
   storeId: string;
   tableId: string;
 }
-export default function Index(props: Props) {
+export default function Page(props: Props) {
   return (
     <Suspense fallback={<div>Loading</div>}>
       <StoreMenuView {...props} />
@@ -23,3 +24,5 @@ export const getServerSideProps = async (context: NextPageContext) => {
     },
   };
 };
+
+Page.getLayout = (page: ReactElement) => <Layout.Mobile>{page}</Layout.Mobile>;
