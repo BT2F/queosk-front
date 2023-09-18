@@ -1,11 +1,12 @@
-import { useSearchParams } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-export default function KakaoCallbackView() {
-  const searchParams = useSearchParams();
-  const code = searchParams.get('code');
+type Props = {
+  code: string;
+};
+
+export default function KakaoCallbackView({ code }: Props) {
   const { signIn } = useAuth();
 
   useEffect(() => {
