@@ -1,6 +1,7 @@
 import AddForm from '@/components/edit_menu/AddForm';
 import { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
+import Header from '@/components/common/Header';
 
 interface NewDataType {
   id?: number;
@@ -216,90 +217,83 @@ export default function EditMenuView() {
   };
 
   return (
-    <div className="w-4/5 mx-auto my-0">
-      <AddForm
+    <div className="relative">
+      <div className="w-4/5 mx-auto my-0">
+        {/* <AddForm
         menuData={getInfo}
         isEditMode={isEditClicked}
         editingMenuData={editingMenu}
         setImageUrl={setImageUrl}
-      />
-      <div>
-        <div className="flex justify-between items-center">
-          <div className="font-bold text-xl my-6">메뉴 목록</div>
-          <div>
-            <button
-              className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white mr-5"
-              onClick={handleDelete}
-            >
-              삭제
-            </button>
-            <button
-              className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
-              onClick={handleEditClick}
-            >
-              편집
-            </button>
-          </div>
-        </div>
+      /> */}
+        <Header title="메뉴" />
         <div>
-          <div className="h-[40px] flex items-center text-center border-y-[2px] border-zinc-300 font-bold">
-            <div className="px-5 py-auto">
-              <input type="checkbox" className="mx-auto invisible" />
-            </div>
-            <div className="w-1/6">No.</div>
-            <div className="w-3/6">메뉴명</div>
-            <div className="w-2/6">가격</div>
-            <div className="w-2/6">이미지</div>
-            <div className="w-2/6">관리</div>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>이미지</th>
+                  <th>메뉴명</th>
+                  <th>가격</th>
+                  <th>상태</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {menuData.menuList.map((data, index) => (
+                  <tr key={index}>
+                    <th>{data.id}</th>
+                    <th>
+                      {data.imageUrl ? (
+                        <img
+                          className="w-[40px] h-[40px] mx-auto rounded-xl"
+                          src={data.imageUrl}
+                          alt="메뉴이미지"
+                        />
+                      ) : (
+                        <img
+                          className="w-[40px] h-[40px] mx-auto rounded-xl"
+                          src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
+                          alt="이미지없음"
+                        />
+                      )}
+                    </th>
+                    <th>{data.name}</th>
+                    <th>{data.price.toLocaleString()}</th>
+                    <th>
+                      {data.status === 'ON_SALE' ? (
+                        <div>판매중</div>
+                      ) : (
+                        <div>품절</div>
+                      )}
+                    </th>
+                    <th>
+                      <button className="btn">편집</button>
+                    </th>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          {menuData && menuData.menuList.length > 0 ? (
-            menuData.menuList.map((data, index) => (
-              <div key={index} className="flex items-center text-center my-2">
-                <div className="px-5 py-auto">
-                  <input
-                    type="checkbox"
-                    onChange={(e) =>
-                      handleSingleCheck(e.target.checked, data.id as number)
-                    }
-                    checked={checkedMenu.includes(
-                      data.id?.toString() as string
-                    )}
-                  />
-                </div>
-                <div className="w-1/6">{data.id}</div>
-                <div className="w-3/6">{data.name}</div>
-                <div className="w-2/6">{data.price} 원</div>
-                {data.imageUrl ? (
-                  <div className="w-2/6">
-                    <img
-                      className="w-[40px] h-[40px] mx-auto"
-                      src={data.imageUrl}
-                      alt="메뉴이미지"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-2/6">
-                    <img
-                      className="w-[40px] h-[40px] mx-auto"
-                      src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-                      alt="이미지없음"
-                    />
-                  </div>
-                )}
-                <div className="w-2/6">
-                  {data.status === 'ON_SALE' ? (
-                    <div>판매중</div>
-                  ) : (
-                    <div>품절</div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>메뉴 없음</div>
-          )}
         </div>
       </div>
+      {isEditClicked && (
+        <div className="flex fixed inset-x-0 bottom-0">
+          <div
+            className="grid h-20 flex-grow bg-base-200 place-items-center text-sky-500 font-bold hover:bg-base-400"
+            onClick={handleEditClick}
+          >
+            수정
+          </div>
+          <div className="divider divider-horizontal mx-0 w-0" />
+          <div
+            className="grid h-20 flex-grow bg-base-200 place-items-center text-red-500 font-bold hover:bg-base-400"
+            onClick={handleDelete}
+          >
+            삭제
+          </div>
+        </div>
+      )}
     </div>
   );
 }
