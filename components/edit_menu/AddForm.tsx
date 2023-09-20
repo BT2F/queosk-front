@@ -33,46 +33,49 @@ export default function AddForm({
 }: AddFormProps) {
   const [imageUrlSave, setImageUrlSave] = useState('');
   const [imageFileSave, setImageFileSave] = useState<File>();
-  const [inputName, setInputName] = useState('');
-  const [inputPrice, setInputPrice] = useState('');
-  const [inputFile, setInputFile] = useState('');
   const [inputStatus, setInputStatus] = useState<'판매중' | '품절'>('판매중');
 
-  useEffect(() => {
-    if (isEditMode && editingMenuData) {
-      setInputName(editingMenuData?.name);
-      setInputPrice(editingMenuData.price.toString());
-      setImageUrlSave(editingMenuData.imageUrl || '');
-    } else {
-      setImageUrlSave('');
-      setInputName('');
-      setInputPrice('');
-    }
-  }, [isEditMode, editingMenuData]);
+  //input reset
+  // const [inputName, setInputName] = useState('');
+  // const [inputPrice, setInputPrice] = useState('');
+  // const [inputFile, setInputFile] = useState('');
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputName(event.target.value);
-  };
+  // useEffect(() => {
+  //   if (isEditMode && editingMenuData) {
+  //     setInputName(editingMenuData?.name);
+  //     setInputPrice(editingMenuData.price.toString());
+  //     setImageUrlSave(editingMenuData.imageUrl || '');
+  //   } else {
+  //     setImageUrlSave('');
+  //     //setInputName('');
+  //     //setInputPrice('');
+  //   }
+  // }, [isEditMode, editingMenuData]);
 
-  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputPrice(event.target.value);
-  };
+  // const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputName(event.target.value);
+  // };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setInputStatus(event.target.value as '판매중' | '품절');
-  };
+  // const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputPrice(event.target.value);
+  // };
 
-  const handleClick = () => {
-    setImageUrlSave('');
-    setInputName('');
-    setInputPrice('');
-    setInputFile('');
-  };
+  // const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setInputStatus(event.target.value as '판매중' | '품절');
+  // };
+
+  // const handleClick = () => {
+  //   setImageUrlSave('');
+  //   //setInputName('');
+  //   //setInputPrice('');
+  //   setInputFile('');
+  // };
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { isSubmitSuccessful },
+    reset,
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -80,29 +83,36 @@ export default function AddForm({
       imageUrl: imageUrlSave,
       imageFile: imageFileSave,
       ...data,
-      price: parseFloat(inputPrice),
+      //price: parseFloat(inputPrice),
     };
     menuData(newData);
-    handleClick();
+    //handleClick();
   };
-  useEffect(() => {
-    console.log(imageFileSave);
-  }, [imageFileSave]);
+
+  // useEffect(() => {
+  //   console.log(imageFileSave);
+  // }, [imageFileSave]);
+
+  // useEffect(() => {
+  //   console.log(inputFile);
+  // }, [inputFile]);
+  // useEffect(() => {
+  //   console.log(imageFileSave);
+  // }, [imageFileSave]);
+
+  // useEffect(() => {
+  //   console.log(imageUrlSave);
+  // }, [imageUrlSave]);
 
   useEffect(() => {
-    console.log(inputFile);
-  }, [inputFile]);
-  useEffect(() => {
-    console.log(imageFileSave);
-  }, [imageFileSave]);
-
-  useEffect(() => {
-    console.log(imageUrlSave);
-  }, [imageUrlSave]);
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
 
   const saveFileImage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setInputFile(e.target.value);
+      //setInputFile(e.target.value);
       const uploadedImage = e.target.files[0];
       setImageFileSave(uploadedImage);
       if (uploadedImage) {
@@ -126,76 +136,93 @@ export default function AddForm({
         }
       }
     }
+    e.target.files = null;
   };
 
   return (
-    <div className="mb-6">
-      <div className="flex justify-between items-center ">
-        <div className="font-semibold text-xl my-6">
-          {isEditMode ? '메뉴 편집' : '메뉴 등록'}
-        </div>
-        <button
-          className="btn w-[80px] h-[33px] border-2 border-[#FBBD23] bg-[#FBBD23] rounded-2xl text-white"
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-        >
-          {isEditMode ? '수정' : '추가'}
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <div className="flex items-center gap-3 mb-[6px]">
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col w-[330px] mx-auto gap-2">
+          <label className="label w-full" htmlFor="menuName">
+            <span className="label-text font-bold">메뉴명</span>
+          </label>
           <input
             {...register('name', {
               required: true,
             })}
+            id="menuName"
             type="text"
-            placeholder="메뉴명"
-            className="input input-bordered input-warning w-full max-w-xs"
-            onChange={handleNameChange}
-            value={inputName}
+            className="input input-bordered input-sm w-full max-w-xs"
+            //onChange={handleNameChange}
+            //value={inputName}
           />
+
+          <label className="label w-full" htmlFor="menuPrice">
+            <span className="label-text font-bold">가격</span>
+          </label>
           <input
             {...register('price', {
               required: true,
             })}
+            id="menuPrice"
             type="text"
-            placeholder="가격"
-            className="input input-bordered input-warning w-full max-w-xs"
-            onChange={handlePriceChange}
-            value={inputPrice}
+            className="input input-bordered input-sm w-full max-w-xs"
+            //onChange={handlePriceChange}
+            //value={inputPrice}
           />
-        </div>
-        <div className="flex justify-between">
+
+          <label className="label" htmlFor="fileInput">
+            <span className="label-text font-bold">이미지</span>
+          </label>
           <input
             {...register('image', {
               required: false,
             })}
+            id="fileInput"
             type="file"
             placeholder="이미지"
-            className="file-input file-input-bordered file-input-warning w-2/3 max-w-xs"
+            className="file-input file-input-bordered file-input-sm w-full max-w-xs"
             onChange={saveFileImage}
-            value={inputFile}
-            id="fileInput"
+            //value={inputFile}
+            accept="image/*"
           />
+
           {isEditMode && (
-            <select
-              {...register('status', {
-                required: true,
-              })}
-              className="input input-bordered input-warning w-1/3 max-w-xs"
-              onChange={handleStatusChange}
-              value={inputStatus}
-            >
-              <option value="ON_SALE">판매중</option>
-              <option value="SOLD_OUT">품절</option>
-            </select>
+            <div>
+              <label className="label" htmlFor="menuState">
+                <span className="label-text font-bold">상태</span>
+              </label>
+              <select
+                {...register('status', {
+                  required: true,
+                })}
+                className="input input-bordered input-warning w-1/3 max-w-xs"
+                //onChange={handleStatusChange}
+                value={inputStatus}
+                id="menuState"
+              >
+                <option value="ON_SALE">판매중</option>
+                <option value="SOLD_OUT">품절</option>
+              </select>
+            </div>
+          )}
+          {imageUrlSave && (
+            <img
+              alt="sample"
+              src={imageUrlSave}
+              className="w-[250px] my-4 mx-auto"
+            />
           )}
         </div>
-        {imageUrlSave && (
-          <img alt="sample" src={imageUrlSave} className="w-[250px]" />
-        )}
       </form>
+      <button
+        className=" flex btn w-[330px] border-2 rounded-2xl bg-base-200 mx-auto"
+        type="submit"
+        //onClick={handleSubmit(onSubmit)}
+        onClick={() => reset()}
+      >
+        {isEditMode ? '수정' : '추가'}
+      </button>
     </div>
   );
 }
