@@ -2,6 +2,7 @@ import AddForm from '@/components/edit_menu/AddForm';
 import { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
 import Header from '@/components/common/Header';
+import Nav from '@/components/common/mystore/Nav';
 
 interface NewDataType {
   id?: number;
@@ -217,14 +218,18 @@ export default function EditMenuView() {
   };
 
   return (
-    <div className="relative">
-      <div className="w-4/5 mx-auto my-0">
+    <div className="relative flex w-11/12 mx-auto">
+      <div className="w-1/5">
+        <Nav />
+      </div>
+      <div className="w-4/5 mx-auto my-0 mt-5">
         {/* <AddForm
         menuData={getInfo}
         isEditMode={isEditClicked}
         editingMenuData={editingMenu}
         setImageUrl={setImageUrl}
       /> */}
+
         <Header title="메뉴" />
         <div>
           <div className="overflow-x-auto">
@@ -246,13 +251,13 @@ export default function EditMenuView() {
                     <th>
                       {data.imageUrl ? (
                         <img
-                          className="w-[40px] h-[40px] mx-auto rounded-xl"
+                          className="w-[40px] h-[40px] rounded-xl"
                           src={data.imageUrl}
                           alt="메뉴이미지"
                         />
                       ) : (
                         <img
-                          className="w-[40px] h-[40px] mx-auto rounded-xl"
+                          className="w-[40px] h-[40px] rounded-xl"
                           src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
                           alt="이미지없음"
                         />
