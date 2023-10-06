@@ -1,6 +1,11 @@
 import axios from '@/lib/axios';
 import { useState, useEffect } from 'react';
-import Header from '@/components/mystore_page/Header';
+import Nav from '@/components/common/mystore/Nav';
+import MyStoreHeader from '@/components/mystore_page/MyStoreHeader';
+import OrderCard from '@/components/mystore_page/OrderCard';
+import RatingCard from '@/components/mystore_page/RatingCard';
+import MenuCard from '@/components/mystore_page/MenuCard';
+import ReviewCard from '@/components/mystore_page/ReviewCard';
 
 interface MenuItem {
   id: number;
@@ -26,6 +31,7 @@ export default function MystorePageView() {
   const [menuData, setMenuData] = useState<MenuDataType>();
   const [storeInfo, setStoreInfo] = useState<StoreInfoType>();
   const [restaurantId, setRestaurantId] = useState<number>();
+  const [reviewList, setReviewList] = useState<any>();
 
   const getRestaurantInfo = async () => {
     try {
@@ -56,71 +62,55 @@ export default function MystorePageView() {
     }
   };
 
+  const getReviewList = async () => {
+    try {
+      if (restaurantId !== undefined) {
+        const response = await axios.get(
+          `api/reviews/restaurants/${restaurantId}`
+        );
+        const data = response.data;
+        setReviewList(data);
+      }
+    } catch (error) {
+      console.error('매장의 메뉴 목록', error);
+    }
+  };
+
   useEffect(() => {
     getMenuList();
+    getReviewList();
   }, [restaurantId]);
 
   return (
-    <div>
-      <Header />
-      <div className="w-[500px] mx-auto absoulte">
-        {storeInfo ? (
-          <div className="w-[500px]">
-            {storeInfo.imageUrl ? (
-              <img
-                src={storeInfo.imageUrl}
-                className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
-              />
-            ) : (
-              <img
-                src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-                className="w-[120px] h-[120px] bg-blue-100 top-[40px] rounded-lg absolute"
-                alt="이미지 없음"
-              />
-            )}
+    <div className="flex">
+      <Nav />
+      <div className="mx-0 w-full">
+        <MyStoreHeader />
 
-            <div className="mt-[100px] mb-[40px]">
-              <div className="text-4xl font-bold mb-3">
-                {storeInfo.restaurantName}
-              </div>
-              <div>{storeInfo.address}</div>
-            </div>
+        <div className="w-6/7 h-full mt-10 mx-10">
+          <div className="flex justify-between gap-5">
+            <OrderCard />
+            <RatingCard />
           </div>
-        ) : (
-          <span className="loading loading-dots loading-md"></span>
-        )}
 
-        <div className="text-2xl font-bold mb-4">메뉴</div>
-        {menuData && menuData.menuList.length > 0 ? (
-          menuData.menuList.map((data, index) => (
-            <div
-              className="card w-[500px] h-[100px] bg-base-100 shadow-xl flex flex-row mb-10 mx-0"
-              key={index}
-            >
-              <figure>
-                {data.imageUrl ? (
-                  <img
-                    src={data.imageUrl}
-                    className="w-[100px]"
-                    alt={data.name}
-                  />
-                ) : (
-                  <img
-                    src="http://skg1891.cafe24.com/wp-content/uploads/2013/11/dummy-image-square.jpg"
-                    className="w-[100px]"
-                    alt="이미지 없음"
-                  />
-                )}
-              </figure>
-              <div className="my-auto mx-6">
-                <h2 className="card-title pb-3">{data.name}</h2>
-                <p>{data.price}원</p>
+          <div className="w-full h-full flex justify-center gap-5">
+            <MenuCard />
+            {/* <div className="card w-1/2 h-screen bg-base-100 shadow-xl flex flex-col mb-10 mx-0">
+              <h1 className="text-xl font-bold absolute top-5 left-5">리뷰</h1>
+              <div className="ml-10 mt-20 flex flex-col gap-10">
+                {reviewList &&
+                  reviewList.map((data: any, index: any) => (
+                    <div key={index}>
+                      <div className="font-semibold text-gray-400 font-sm text-xl">
+                        {data.subject}
+                      </div>
+                    </div>
+                  ))}
               </div>
-            </div>
-          ))
-        ) : (
-          <span className="loading loading-dots loading-md"></span>
-        )}
+            </div> */}
+            <ReviewCard />
+          </div>
+        </div>
       </div>
     </div>
   );
