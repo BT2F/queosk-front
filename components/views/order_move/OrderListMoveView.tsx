@@ -3,6 +3,7 @@ import CookedList from '@/components/order_move/CookedList';
 import OrderList, { OrderDataType } from '@/components/order_move/OrderList';
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
+import Nav from '@/components/common/mystore/Nav';
 
 interface TableInfo {
   id: number;
@@ -32,7 +33,7 @@ export default function OrderListMoveView() {
       setOrderData(data);
       const newVisibleStateIndex = Array.from(
         { length: data.length },
-        (_, i) => i,
+        (_, i) => i
       );
       setVisibleStateIndex(newVisibleStateIndex);
     } catch (error) {
@@ -76,8 +77,9 @@ export default function OrderListMoveView() {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-row justify-center px-[10px] py-[10px] overflow-hidden">
-      <div className="w-2/3 overflow-y-scroll" id="scrollCustom">
+    <div className="flex">
+      <Nav />
+      <div className="mx-0 w-full" id="scrollCustom">
         <OrderList
           visibleStateIndex={visibleStateIndex}
           data={orderData}
