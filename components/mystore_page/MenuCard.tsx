@@ -14,24 +14,12 @@ interface MenuDataType {
   menuList: MenuItem[];
 }
 
-export default function MenuCard() {
+interface Props {
+  restaurantId: number;
+}
+
+export default function MenuCard({ restaurantId }: Props) {
   const [menuData, setMenuData] = useState<MenuDataType>();
-  const [restaurantId, setRestaurantId] = useState<number>();
-
-  const getRestaurantInfo = async () => {
-    try {
-      const response = await axios.get('api/restaurants');
-      const data = response.data;
-      // setStoreInfo(data);
-      setRestaurantId(data.id);
-    } catch (error) {
-      console.error('매장 정보', error);
-    }
-  };
-
-  useEffect(() => {
-    getRestaurantInfo();
-  }, []);
 
   const getMenuList = async () => {
     try {
@@ -55,8 +43,8 @@ export default function MenuCard() {
       <h1 className="text-xl font-bold absolute top-5 left-5">메뉴</h1>
       <div className="ml-10 mt-20 flex flex-col gap-10">
         {menuData && menuData.menuList.length > 0 ? (
-          menuData.menuList.map((data, index) => (
-            <div className="flex" key={index}>
+          menuData.menuList.map((data) => (
+            <div className="flex" key={data.id}>
               <img
                 src={
                   data.imageUrl
@@ -68,7 +56,7 @@ export default function MenuCard() {
               />
 
               <div className="my-auto mx-10">
-                <h2 className="card-title pb-3">{data.name}</h2>
+                <h2 className="font-bold pb-3">{data.name}</h2>
                 <p>{data.price.toLocaleString()}원</p>
               </div>
             </div>

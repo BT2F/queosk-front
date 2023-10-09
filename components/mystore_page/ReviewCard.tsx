@@ -1,24 +1,17 @@
 import axios from '@/lib/axios';
 import { useState, useEffect } from 'react';
 
-export default function ReviewCard() {
-  const [restaurantId, setRestaurantId] = useState<number>();
-  const [reviewList, setReviewList] = useState<any>();
+interface ReviewDataType {
+  id: number;
+  subject: string;
+}
 
-  const getRestaurantInfo = async () => {
-    try {
-      const response = await axios.get('api/restaurants');
-      const data = response.data;
-      // setStoreInfo(data);
-      setRestaurantId(data.id);
-    } catch (error) {
-      console.error('매장 정보', error);
-    }
-  };
+interface Props {
+  restaurantId: number;
+}
 
-  useEffect(() => {
-    getRestaurantInfo();
-  }, []);
+export default function ReviewCard({ restaurantId }: Props) {
+  const [reviewList, setReviewList] = useState<ReviewDataType[]>();
 
   const getReviewList = async () => {
     try {
@@ -30,7 +23,7 @@ export default function ReviewCard() {
         setReviewList(data);
       }
     } catch (error) {
-      console.error('매장의 메뉴 목록', error);
+      console.error('매장의 리뷰 목록', error);
     }
   };
 
@@ -43,11 +36,9 @@ export default function ReviewCard() {
       <h1 className="text-xl font-bold absolute top-5 left-5">리뷰</h1>
       <div className="ml-10 mt-20 flex flex-col gap-10">
         {reviewList &&
-          reviewList.map((data: any, index: any) => (
-            <div key={index}>
-              <div className="font-semibold text-gray-400 font-sm text-xl">
-                {data.subject}
-              </div>
+          reviewList.map((review) => (
+            <div key={review.id}>
+              <div className="font-bold">{review.subject}</div>
             </div>
           ))}
       </div>
