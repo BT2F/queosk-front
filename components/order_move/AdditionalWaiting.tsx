@@ -1,4 +1,3 @@
-import LayoutState from './LayoutState';
 import axios from '@/lib/axios';
 import { useState, useEffect } from 'react';
 
@@ -10,7 +9,6 @@ interface waitingTeam {
 export default function AdditionalWaiting() {
   const [waiting, setWaiting] = useState<waitingTeam>();
 
-  // 웨이팅 팀 수 및 팀 정보 확인
   const getWaitingTeam = async () => {
     try {
       const response = await axios.get('/api/restaurants/queue');
@@ -24,23 +22,23 @@ export default function AdditionalWaiting() {
   useEffect(() => {
     getWaitingTeam();
 
-    const intervalId = setInterval(() => {
-      getWaitingTeam();
-    }, 10000);
+    // const intervalId = setInterval(() => {
+    //   getWaitingTeam();
+    // }, 10000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
   }, []);
 
   return (
-    <LayoutState className="w-auto h-[200px] flex justify-center items-center gap-2">
+    <div className="h-[250px] card bg-base-100 shadow-xl flex justify-center items-center mx-5 my-5">
       <div>추가 대기 현황</div>
       {waiting ? (
         <div className="text-7xl font-bold">{waiting.totalQueue}</div>
       ) : (
         <span className="loading loading-spinner loading-md"></span>
       )}
-    </LayoutState>
+    </div>
   );
 }

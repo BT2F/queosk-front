@@ -1,60 +1,63 @@
-import LayoutState from './LayoutState';
+import { useEffect, useState } from 'react';
+import axios from '@/lib/axios';
+import { OrderType } from '../views/order_move/OrderListMoveView';
 
-interface MenuInfo {
-  id?: number;
-  restaurantId?: number;
-  name: string;
-  imageUrl?: string;
-  price?: number;
-  status?: 'SOLD_OUT' | 'ON_SALE';
-}
+export default function CookedList() {
+  const [todayDone, setTodayDone] = useState<OrderType[]>();
 
-interface CookedDataType {
-  id: number;
-  tableId: number;
-  menu: MenuInfo;
-  orderStatus: 'IN_PROGRESS' | 'DONE' | 'CANCELED';
-  count: number;
-}
-interface CookedListProps {
-  cookedMenuList: CookedDataType[];
-}
+  const getTodayDoneOrder = async () => {
+    try {
+      const response = await axios.get('/api/restaurant/orders/today-done');
+      const data = response.data;
+      setTodayDone(data);
+    } catch (error) {
+      console.error('주문 처리중 리스트', error);
+    }
+  };
 
-export default function CookedList({ cookedMenuList }: CookedListProps) {
+  useEffect(() => {
+    getTodayDoneOrder();
+  }, []);
+
   return (
-    <LayoutState className="w-auto h-[585px]">
-      <div className="text-center border-b border-black border-solid py-2 font-bold">
-        조리 완료 목록
-      </div>
-      <div className="overflow-y-scroll" id="scrollCustom">
-        {cookedMenuList.map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col justify-center gap-3 h-[100px] border-b-2 border-zinc-200"
-          >
-            <div className="font-bold px-2">테이블 {item.tableId}</div>
-            <div className="px-2 flex justify-between">
-              <span>{item.menu.name}</span>
-              <span>x {item.count}</span>
-            </div>
+    <div>
+      {todayDone && todayDone.length > 0 ? (
+        todayDone.map((data) => (
+          <div key={data.id} className="mx-5 my-5">
+            <table className="table card bg-base-100 shadow-xl">
+              <thead>
+                <tr>
+                  <th className="w-4/5 font-semibold text-2xl text-orange-400">
+                    {data.id}
+                    <br />
+                    <span className="badge badge-ghost badge-sm">
+                      테이블 {data.tableId}
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="mb-10">
+                {data.menuItems.map((a) => {
+                  return (
+                    <tr className="w-full">
+                      <td key={a.id}>
+                        <span className="font-bold text-lg">{a.menu.name}</span>
+                        <br />
+                        <span className="badge badge-ghost badge-sm">
+                          {a.menu.price.toLocaleString()}원
+                        </span>
+                      </td>
+                      <td>x {a.count}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-        ))}
-      </div>
-      <style>
-        {`
-            #scrollCustom::-webkit-scrollbar {
-                width: 4px;
-                cursor: pointer;                   
-            }
-            #scrollCustom::-webkit-scrollbar-track {
-                background-color: rgba(229, 231, 235, var(--bg-opacity));
-                cursor: pointer;
-            }
-            #scrollCustom::-webkit-scrollbar-thumb {
-                cursor: pointer;
-                background-color: #a0aec0;
-            }`}
-      </style>
-    </LayoutState>
+        ))
+      ) : (
+        <div>메뉴없음</div>
+      )}
+    </div>
   );
 }
