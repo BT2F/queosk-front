@@ -1,59 +1,38 @@
 import AdditionalWaiting from '@/components/order_move/AdditionalWaiting';
 import CookedList from '@/components/order_move/CookedList';
-import OrderList, { OrderDataType } from '@/components/order_move/OrderList';
+import OrderList from '@/components/order_move/OrderList';
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
 import Nav from '@/components/common/mystore/Nav';
+import Header from '@/components/common/Header';
 
-interface TableInfo {
+interface MenuItem {
+  count: number;
   id: number;
-  status?: 'USING' | 'OPEN';
+  menu: {
+    createdAt: string;
+    updatedAt: string;
+    id: number;
+    restaurantId: number;
+    name: string;
+    imageUrl: string;
+    price: number;
+    status: string;
+  };
 }
 
-interface MenuInfo {
-  id?: number;
-  restaurantId?: number;
-  name: string;
-  imageUrl?: string;
-  price?: number;
-  status?: 'SOLD_OUT' | 'ON_SALE';
+export interface OrderType {
+  id: number;
+  menuItems: MenuItem[];
+  orderStatus: string;
+  tableId: number;
+  userId: number;
 }
 
 export default function OrderListMoveView() {
-  const [visibleStateIndex, setVisibleStateIndex] = useState<number[]>([]);
-  const [orderData, setOrderData] = useState<OrderDataType[]>([]);
+  const [orderData, setOrderData] = useState<OrderType[]>([]);
 
-  const [cookedMenuList, setCookedMenuList] = useState<OrderDataType[]>([]);
-
-  //주문 처리중 리스트 확인
-  const getInProgressOrder = async () => {
-    try {
-      const response = await axios.get('/api/restaurant/orders/in-progress');
-      const data = response.data;
-      setOrderData(data);
-      const newVisibleStateIndex = Array.from(
-        { length: data.length },
-        (_, i) => i
-      );
-      setVisibleStateIndex(newVisibleStateIndex);
-    } catch (error) {
-      console.error('주문 처리중 리스트 확인', error);
-    }
-  };
-  useEffect(() => {
-    getInProgressOrder();
-    const intervalId = setInterval(() => {
-      getInProgressOrder();
-    }, 10000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log(orderData);
-  }, [orderData]);
+  const [cookedMenuList, setCookedMenuList] = useState<OrderType[]>([]);
 
   //주문 처리 완료 리스트 확인
   const getTodayDoneOrder = async () => {
@@ -65,26 +44,38 @@ export default function OrderListMoveView() {
       console.error('주문 처리중 리스트 확인', error);
     }
   };
+
   useEffect(() => {
     getTodayDoneOrder();
-    const intervalId = setInterval(() => {
-      getTodayDoneOrder();
-    }, 10000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
   }, []);
+  // useEffect(() => {
+  //   getTodayDoneOrder();
+  //   const intervalId = setInterval(() => {
+  //     getTodayDoneOrder();
+  //   }, 10000);
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
   return (
     <div className="flex">
       <Nav />
+
       <div className="mx-0 w-full" id="scrollCustom">
-        <OrderList
-          visibleStateIndex={visibleStateIndex}
-          data={orderData}
-          onRefresh={getInProgressOrder}
-        />
+        <div className="w-6/7 h-screen mx-10 flex">
+          <div className="w-2/3">
+            <Header title="주문 처리중" isBack={false} />
+            <OrderList />
+          </div>
+          <div className="w-1/3">
+            <AdditionalWaiting />
+            <Header title="주문 완료" isBack={false} />
+            {/* <CookedList cookedMenuList={cookedMenuList} /> */}
+          </div>
+        </div>
+
         <style>
           {`
             #scrollCustom::-webkit-scrollbar {
@@ -100,10 +91,6 @@ export default function OrderListMoveView() {
                 background-color: #a0aec0;
             }`}
         </style>
-      </div>
-      <div className="w-[250px] h-screen">
-        <AdditionalWaiting />
-        <CookedList cookedMenuList={cookedMenuList} />
       </div>
     </div>
   );
