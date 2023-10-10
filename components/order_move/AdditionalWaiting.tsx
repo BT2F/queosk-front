@@ -21,14 +21,13 @@ export default function AdditionalWaiting() {
 
   useEffect(() => {
     getWaitingTeam();
+    const intervalId = setInterval(() => {
+      getWaitingTeam();
+    }, 10000);
 
-    // const intervalId = setInterval(() => {
-    //   getWaitingTeam();
-    // }, 10000);
-
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (

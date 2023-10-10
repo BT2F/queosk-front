@@ -17,6 +17,13 @@ export default function CookedList() {
 
   useEffect(() => {
     getTodayDoneOrder();
+    const intervalId = setInterval(() => {
+      getTodayDoneOrder();
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
@@ -39,8 +46,8 @@ export default function CookedList() {
               <tbody className="mb-10">
                 {data.menuItems.map((a) => {
                   return (
-                    <tr className="w-full">
-                      <td key={a.id}>
+                    <tr className="w-full" key={a.id}>
+                      <td>
                         <span className="font-bold text-lg">{a.menu.name}</span>
                         <br />
                         <span className="badge badge-ghost badge-sm">

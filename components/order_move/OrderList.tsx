@@ -19,18 +19,14 @@ export default function OrderList() {
 
   useEffect(() => {
     getInProgressOrder();
+    const intervalId = setInterval(() => {
+      getInProgressOrder();
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
-
-  // useEffect(() => {
-  //   getInProgressOrder();
-  //   const intervalId = setInterval(() => {
-  //     getInProgressOrder();
-  //   }, 10000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
 
   const editStatusOrder = async (orderId: number, status: string) => {
     try {
@@ -128,9 +124,9 @@ export default function OrderList() {
                 <tbody className="mb-10">
                   {data.menuItems.map((a) => {
                     return (
-                      <tr className="w-full">
+                      <tr className="w-full" key={a.id}>
                         <td></td>
-                        <td key={a.id}>
+                        <td>
                           <span className="font-bold text-lg">
                             {a.menu.name}
                           </span>
