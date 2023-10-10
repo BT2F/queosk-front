@@ -52,6 +52,16 @@ export default function OrderCard() {
     getInProgressOrder();
     getTodayDoneOrder();
     getWaitingTeam();
+    const intervalId = setInterval(() => {
+      getTodayOrder();
+      getInProgressOrder();
+      getTodayDoneOrder();
+      getWaitingTeam();
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
