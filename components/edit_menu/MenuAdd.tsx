@@ -1,4 +1,4 @@
-import Form from './Form';
+import AddForm from './AddForm';
 
 interface Props {
   refresh: () => void;
@@ -12,7 +12,7 @@ export default function Add({ refresh }: Props) {
         onClick={() => {
           if (document) {
             (
-              document.getElementById('my_modal') as HTMLFormElement
+              document.getElementById('Add_Modal') as HTMLFormElement
             ).showModal();
           }
         }}
@@ -31,14 +31,14 @@ export default function Add({ refresh }: Props) {
           />
         </svg>
       </button>
-      <dialog id="my_modal" className="modal">
+      <dialog id="Add_Modal" className="modal">
         <div className="modal-box h-[500px]">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
           </form>
-          <Form refresh={refresh} />
+          <AddForm refresh={refresh} />
         </div>
       </dialog>
     </div>

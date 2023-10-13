@@ -16,7 +16,7 @@ interface FormData extends addDataType {
 interface Props {
   refresh: () => void;
 }
-export default function Form({ refresh }: Props) {
+export default function AddForm({ refresh }: Props) {
   const [addData, setAddData] = useState<addDataType>();
   const [imageUrl, setImageUrl] = useState('');
 
@@ -44,9 +44,7 @@ export default function Form({ refresh }: Props) {
   };
   const addNewMenu = async () => {
     try {
-      const response = await axios.post('/api/restaurants/menus', addData);
-      const data = response.data;
-      console.log(data);
+      await axios.post('/api/restaurants/menus', addData);
       refresh();
       reset();
     } catch (error) {
@@ -75,7 +73,6 @@ export default function Form({ refresh }: Props) {
 
   useEffect(() => {
     if (addData) {
-      console.log(addData);
       addNewMenu();
     }
   }, [addData]);
