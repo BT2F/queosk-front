@@ -30,15 +30,15 @@ export default function TableView() {
     getTables();
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     getTables();
-  //   }, 10000);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getTables();
+    }, 10000);
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const deleteTable = async (tableId: number) => {
     try {
