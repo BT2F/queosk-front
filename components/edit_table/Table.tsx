@@ -1,6 +1,6 @@
-interface TableProps {
-  tableId: number;
-  status: 'OPEN' | 'USING';
+import { TablesData } from '../views/edit_table/TableView';
+
+interface TableProps extends TablesData {
   mode: boolean;
   onTableClick: (tableId: number) => void;
   onStatusChange: (newStatus: 'OPEN' | 'USING') => void;
@@ -8,6 +8,7 @@ interface TableProps {
 
 export default function Table({
   tableId,
+  tableName,
   status,
   mode,
   onTableClick,
@@ -18,10 +19,14 @@ export default function Table({
   };
 
   return (
-    <div className="card items-center w-[180px] h-[200px] bg-base-100 shadow-xl border-2 border-[#FBBD23] rounded-3xl mt-7">
+    <div
+      className={`card items-center w-full h-[200px] shadow-xl border-2 rounded-3xl mt-7 ${
+        status === 'OPEN' ? 'border-orange-300' : 'border-base-300'
+      }`}
+    >
       <div className="w-full px-4 py-2 flex flex-col gap-4">
         <div className="flex justify-between">
-          <h2 className="card-title">{tableId}번</h2>
+          <h2 className="card-title text-gray-500">{tableName}</h2>
           {mode ? (
             <button className="btn btn-circle" onClick={handleClick}>
               <svg
@@ -59,20 +64,15 @@ export default function Table({
           )}
         </div>
         {status === 'OPEN' ? (
-          <div className="font-bold text-2xl mx-auto">빈자리</div>
-        ) : (
-          <div className="font-bold text-2xl mx-auto">사용중</div>
-        )}
-        {status === 'OPEN' ? (
           <button
-            className="btn bg-rose-300 w-[100px] mx-auto"
+            className="btn w-2/5 bg-orange-200 mx-auto"
             onClick={() => onStatusChange('USING')}
           >
             사용하기
           </button>
         ) : (
           <button
-            className="btn bg-sky-300 w-[100px] mx-auto"
+            className="btn w-2/5 bg-base-300 mx-auto"
             onClick={() => onStatusChange('OPEN')}
           >
             비어놓기
