@@ -1,8 +1,9 @@
 import type { Preview } from '@storybook/react';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
-import '@radix-ui/themes/styles.css';
 import BaseRadixTheme from './BaseRadixTheme';
-import { Theme } from '@radix-ui/themes';
+import '@/styles/globals.css';
+import './radux-ui.css';
+
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
