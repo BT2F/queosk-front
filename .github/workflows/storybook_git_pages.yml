@@ -19,7 +19,7 @@ jobs:
 
       - name: Cache node_modules
         id: chach
-        uses: actions/cahce@v3
+        uses: actions/cache@v3.3.2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
