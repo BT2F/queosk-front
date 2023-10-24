@@ -1,0 +1,14 @@
+name: Build and Publish storybook to Git pages
+on:
+  push:
+    paths:
+      - "components/**"
+      - "stories/**"
+      - ".storybook/**"
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.0
+        with:
+          path: storybook-static
