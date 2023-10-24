@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import StoreCard from '@/components/renew/store/StoreCard';
+import StoreCard from '@/components/renew/store_info/StoreCard';
 
 const meta = {
   title: 'user/StoreInfo/StoreCard',

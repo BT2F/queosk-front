@@ -27,7 +27,7 @@ export default function Button({
   return (
     <RdButton
       size={sizeMap[size]}
-      className={`duration-300  
+      className={`duration-300 cursor-pointer 
         ${className} 
       `}
       {...props}
