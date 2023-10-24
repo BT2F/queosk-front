@@ -9,6 +9,32 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.0
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: use Node.js
+        uses: actions/setup-node@v3
         with:
-          path: storybook-static
+          node-version: 18
+
+      - name: Cache node_modules
+        id: chach
+        uses: actions/cahce@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install deps
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Build
+        run: yarn build-storybook
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
